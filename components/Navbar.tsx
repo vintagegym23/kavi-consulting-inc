@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
   <img
     src={logo}
     alt="Kavi Consulting Inc Logo"
-    className="h-10 w-auto object-contain"
+    className="h-14 w-auto object-contain"
   />
 
 
@@ -49,13 +49,6 @@ const Navbar: React.FC = () => {
           </nav>
 
           <div className="flex items-center gap-4">
-            <Link 
-              to="/contact"
-              className="hidden sm:block bg-primary hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-lg shadow-blue-500/20 active:scale-95"
-            >
-              Get a Quote
-            </Link>
-            
             {/* Mobile menu button */}
             <button 
               onClick={() => setIsOpen(!isOpen)}
@@ -80,13 +73,6 @@ const Navbar: React.FC = () => {
               {link.name}
             </Link>
           ))}
-          <Link 
-            to="/contact"
-            onClick={() => setIsOpen(false)}
-            className="block w-full text-center bg-primary text-white px-6 py-3 rounded-lg text-sm font-semibold"
-          >
-            Get a Quote
-          </Link>
         </div>
       )}
     </header>
