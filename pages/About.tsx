@@ -39,7 +39,7 @@ const About: React.FC = () => {
                   Founded in 2010, Kavi Consulting Inc. has grown from a specialized engineering firm into a multi-disciplinary powerhouse in the civil engineering and construction management sectors.
                 </p>
                 <p>
-                  With over 80 years of combined professional experience within our leadership team, we bring a wealth of knowledge to every project. We are proud to be a certified Minority Business Enterprise (MBE), Disadvantaged Business Enterprise (DBE), and Historically Underutilized Business (HUB).
+                  With over 50 years of combined professional experience within our leadership team, we bring a wealth of knowledge to every project. We are proud to be a certified Minority Business Enterprise (MBE), Disadvantaged Business Enterprise (DBE), and Historically Underutilized Business (HUB).
                 </p>
               </div>
               <div className="flex flex-wrap gap-4 pt-4">
@@ -48,7 +48,7 @@ const About: React.FC = () => {
                   <div className="text-xs uppercase tracking-wider text-slate-500">Year Founded</div>
                 </div>
                 <div className="bg-slate-50 px-6 py-4 rounded-xl border border-slate-100">
-                  <div className="text-primary font-bold text-2xl">80+</div>
+                  <div className="text-primary font-bold text-2xl">50+</div>
                   <div className="text-xs uppercase tracking-wider text-slate-500">Combined Years Exp.</div>
                 </div>
               </div>
