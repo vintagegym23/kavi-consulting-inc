@@ -33,9 +33,9 @@ const Contact: React.FC = () => {
               </div>
               <div className="grid gap-8">
                 {[
-                  { icon: 'location_on', title: 'Houston Office', val: '1200 Smith Street, Suite 1600\nHouston, Texas 77002', link: null },
-                  { icon: 'call', title: 'Phone', val: '+1 (713) 555-0198', link: 'tel:+17135550198' },
-                  { icon: 'mail', title: 'Email Address', val: 'contact@kaviconsulting.com', link: 'mailto:contact@kaviconsulting.com' }
+                  { icon: 'location_on', title: 'Houston Office', val: '1200 Smith Street, Suite 1600\nHouston, Texas 77002' },
+                  { icon: 'call', title: 'Phone', val: '+1 (713) 555-0198' },
+                  { icon: 'mail', title: 'Email Address', val: 'contact@kaviconsulting.com' }
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-6 items-start">
                     <div className="flex-shrink-0 w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-primary">
@@ -43,13 +43,7 @@ const Contact: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-lg text-slate-900">{item.title}</h4>
-                      {item.link ? (
-                        <a href={item.link} className="text-slate-500 mt-1 whitespace-pre-line hover:text-primary transition-colors font-medium text-base">
-                          {item.val}
-                        </a>
-                      ) : (
-                        <p className="text-slate-500 mt-1 whitespace-pre-line">{item.val}</p>
-                      )}
+                      <p className="text-slate-500 mt-1 whitespace-pre-line">{item.val}</p>
                     </div>
                   </div>
                 ))}
