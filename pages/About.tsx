@@ -2,6 +2,9 @@
 import React from 'react';
 import vijaya from "../images/Vijaya Rapolu.png";
 import aravind from "../images/Aravind Nimma.png";
+import TeamCard from '../components/TeamCard';
+import { teamMembers } from '../data/team';
+import { clients, clientsByCategory } from '../data/clients';
 
 const About: React.FC = () => {
   return (
@@ -79,59 +82,17 @@ const About: React.FC = () => {
             <p className="text-slate-600 max-w-2xl mx-auto">Our team is led by industry veterans dedicated to technical excellence and client success.</p>
           </div>
           <div className="grid md:grid-cols-2 gap-12">
-            {[
-                { 
-    name: 'Vijaya Rapolu, P.E.', 
-    role: 'President & Principal Engineer', 
-    exp: '29 Years Exp.', 
-    img: vijaya,
-    specialties: [
-      'Transportation Engineering',
-      'Hydrologic & Hydraulic Design',
-      'Program Management',
-      'Strategic Planning'
-    ]
-  },
-  { 
-    name: 'Aravind Nimma, P.E., CFM', 
-    role: 'Director of Operations', 
-    exp: '17 Years Exp.', 
-    img: aravind,
-    specialties: [
-      'Drainage & Stormwater Management',
-      'Certified Floodplain Management',
-      'Construction Services',
-      'Municipal Engineering'
-    ]
-  }
-            ].map((leader, idx) => (
-              <div key={idx} className="bg-white rounded-3xl overflow-hidden shadow-xl border border-slate-100 flex flex-col lg:flex-row group">
-                <div className="lg:w-1/2 relative overflow-hidden h-72 lg:h-auto">
-                  <img alt={leader.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={leader.img} />
-                  {/* <div className="absolute top-6 left-6 bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm shadow-lg">
-                    {leader.exp}
-                  </div> */}
-                  <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-  <span className="inline-block bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm shadow-lg">
-    {leader.exp}
-  </span>
-</div>
-
-                </div>
-                <div className="lg:w-1/2 p-8 lg:p-10 flex flex-col justify-center">
-                  <h3 className="text-2xl font-bold text-slate-900 mb-1">{leader.name}</h3>
-                  <p className="text-primary font-semibold mb-6">{leader.role}</p>
-                  <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">Specialties</h4>
-                  <ul className="space-y-3">
-                    {leader.specialties.map((spec, i) => (
-                      <li key={i} className="flex items-center gap-3 text-slate-600 text-sm">
-                        <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-                        {spec}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+            {teamMembers.map((leader, idx) => (
+              <TeamCard
+                key={idx}
+                name={leader.name}
+                credentials={leader.credentials}
+                role={leader.role}
+                experience={leader.experience}
+                image={leader.image}
+                specialties={leader.specialties}
+                bio={leader.bio}
+              />
             ))}
           </div>
         </div>
@@ -158,6 +119,43 @@ const About: React.FC = () => {
                 <p className="text-slate-600 leading-relaxed">{item.text}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Clients Section */}
+      <section className="py-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-extrabold text-slate-900 mb-4">Our Clients</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">Trusted by federal, state, county, and municipal agencies throughout the region and nation</p>
+          </div>
+
+          <div className="space-y-12">
+            {[
+              { category: 'federal', label: 'Federal Agencies' },
+              { category: 'state', label: 'State Agencies' },
+              { category: 'county', label: 'County Agencies' },
+              { category: 'municipal', label: 'Municipal Clients' },
+              { category: 'regional', label: 'Regional Authorities' }
+            ].map(({ category, label }) => {
+              const categoryClients = clientsByCategory(category as any);
+              return categoryClients.length > 0 ? (
+                <div key={category}>
+                  <h3 className="text-xl font-bold text-slate-900 mb-6">{label}</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {categoryClients.map(client => (
+                      <div key={client.id} className="bg-white p-6 rounded-lg border border-slate-100 shadow-sm hover:shadow-md hover:border-primary/20 transition-all">
+                        <p className="font-semibold text-slate-700 text-sm">{client.name}</p>
+                        {client.description && (
+                          <p className="text-xs text-slate-500 mt-2">{client.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null;
+            })}
           </div>
         </div>
       </section>

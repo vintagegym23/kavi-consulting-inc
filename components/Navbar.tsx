@@ -2,19 +2,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../images/kavilogo.png';
-
+import { navLinks as navData } from '../data/navigation';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = React.useState(false);
-
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Services', path: '/services' },
-    { name: 'Projects', path: '/projects' },
-    { name: 'Who We Are', path: '/about' },
-    
-  ];
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -35,7 +27,7 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
+            {navData.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
@@ -63,7 +55,7 @@ const Navbar: React.FC = () => {
       {/* Mobile Nav */}
       {isOpen && (
         <div className="md:hidden bg-white border-b border-slate-200 py-4 px-4 space-y-4 shadow-xl">
-          {navLinks.map((link) => (
+          {navData.map((link) => (
             <Link
               key={link.name}
               to={link.path}

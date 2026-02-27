@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import emailjs from '@emailjs/browser';
+import { services as serviceData } from '../data/services';
 
 // --- Types ---
 interface FormData {
@@ -16,103 +17,7 @@ interface FormErrors {
   message?: string;
 }
 
-interface ServiceCategory {
-  title: string;
-  icon: string;
-  features: string[];
-}
-
 type NotificationType = 'success' | 'error' | null;
-
-// --- Data (Exact technical points preserved) ---
-const serviceCategories: ServiceCategory[] = [
-  { 
-    title: 'Transportation', 
-    icon: 'traffic', 
-    features: [
-      'Roadway & Intersection Geometrics', 
-      'Traffic Signal Impact Analysis', 
-      'ADA-Compliant Pedestrian Infrastructure', 
-      'Construction Sequencing'
-    ] 
-  },
-  { 
-    title: 'Drainage Design', 
-    icon: 'waves', 
-    features: [
-      'H&H Modeling', 
-      'Floodplain Analysis', 
-      'Storm Water Management Modeling', 
-      'Bridge Hydraulics & Scour Analysis', 
-      'Drainage Facilities & Detention Design' 
-    ] 
-  },
-  { 
-    title: 'Utility Design', 
-    icon: 'plumbing', 
-    features: [
-      'Water & Sewer Systems', 
-      'Underground Infrastructure', 
-      'Utility Coordination (Public/Private)'
-    ] 
-  },
-  { 
-    title: 'Feasibility Studies', 
-    icon: 'query_stats', 
-    features: [
-      'Preliminary Design', 
-      'Site Selection Audits', 
-      'Environmental Constraints', 
-      'Stakeholder Coordination and Public Impact' 
-    ] 
-  },
-  { 
-    title: 'Permitting', 
-    icon: 'verified', 
-    features: [
-      'Right-of-way and Easement Coordination', 
-      'Local, State & Federal Compliance', 
-      'Regulatory Agency Liaison', 
-      'Entitlement Support'
-    ] 
-  },
-  { 
-    title: 'Construction Phase', 
-    icon: 'imagesearch_roller', 
-    features: [
-      'Shop Drawing Reviews', 
-      'Material Submittals', 
-      'Site/Construction Inspections'
-    ] 
-  },
-  { 
-    title: 'Construction Management', 
-    icon: 'engineering', 
-    features: [
-      'Quality Assurance/Control', 
-      'Schedule Optimization', 
-      'Safety Compliance Audits'
-    ] 
-  },
-  { 
-    title: 'Program Management', 
-    icon: 'account_tree', 
-    features: [
-      'Portfolio-wide Strategy', 
-      'Capital Planning', 
-      'Stakeholder Integration'
-    ] 
-  },
-  { 
-    title: 'Site Development', 
-    icon: 'foundation', 
-    features: [
-      'Grading & Drainage Plans', 
-      'Erosion & Sediment Control', 
-      'Commercial & Industrial'
-    ] 
-  },
-];
 
 const Services: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -224,13 +129,14 @@ const Services: React.FC = () => {
       <section className="py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {serviceCategories.map((service, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col h-full">
+            {serviceData.map((service) => (
+              <div key={service.id} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col h-full">
                 <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
                   <span className="material-symbols-outlined text-primary text-3xl">{service.icon}</span>
                 </div>
                 <h3 className="text-xl font-bold mb-4 text-slate-900">{service.title}</h3>
-                
+                <p className="text-slate-600 text-sm mb-6">{service.description}</p>
+
                 <div className={`pr-2 custom-scrollbar ${service.features.length > 3 ? 'max-h-36 overflow-y-auto' : ''}`}>
                   <ul className="space-y-3">
                     {service.features.map((feature, i) => (
@@ -244,6 +150,54 @@ const Services: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Detailed Service Descriptions */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-extrabold text-slate-900 mb-16 text-center">Service Details</h2>
+
+          {serviceData.map((service, idx) => (
+            <div key={service.id} className={`mb-20 pb-20 ${idx !== serviceData.length - 1 ? 'border-b border-slate-200' : ''}`}>
+              <div className="flex items-start gap-6 mb-8">
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span className="material-symbols-outlined text-primary text-2xl">{service.icon}</span>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">{service.title}</h3>
+                  <p className="text-slate-600 leading-relaxed">{service.overview || service.description}</p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-lg font-bold text-slate-900 mb-4">Key Capabilities</h4>
+                  <ul className="grid sm:grid-cols-2 gap-3">
+                    {service.features.map((feature, i) => (
+                      <li key={i} className="flex items-start gap-3 text-slate-700">
+                        <span className="material-symbols-outlined text-primary text-lg flex-shrink-0 mt-0.5">arrow_forward</span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {service.tools && service.tools.length > 0 && (
+                  <div>
+                    <h4 className="text-lg font-bold text-slate-900 mb-4">Tools & Technologies</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {service.tools.map((tool, i) => (
+                        <span key={i} className="bg-blue-100 text-primary px-4 py-2 rounded-lg text-sm font-medium">
+                          {tool}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
