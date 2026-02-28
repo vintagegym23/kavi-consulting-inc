@@ -1,9 +1,19 @@
 import { Link } from 'react-router-dom';
-import { Typewriter } from 'react-simple-typewriter'
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import engineering from '../images/engineering.png';
+
+// 1. IMPORT YOUR NEW COMPONENT
+import Hero from '../components/Hero';
+
+// 2. YOUR IMAGE IMPORTS
+import hero1 from '../images/home1.jpeg';
+import hero2 from '../images/home2.jpeg';
+import hero3 from '../images/home3.jpeg';
+import hero4 from '../images/home4.jpeg';
+import hero5 from '../images/home5.jpeg';
+import logo from '../images/logo.png';
 
 import urban from '../images/urban interchage.jpg';
 import grandparking from '../images/grand parking way.jpg';
@@ -11,14 +21,10 @@ import postoak from '../images/post oak boulevard.jpg';
 import metropolitan from '../images/metropoliten.png';
 import River from '../images/river crossing.png';
 
-const taglines = [
-  'Civil engineering excellence delivering precision, safety, and innovation in modern infrastructure projects across the nation.',
-  'Building resilient infrastructure with precision, safety, and innovation.',
-  'Engineering modern infrastructure that stands the test of time.',
-  'Delivering reliable civil engineering solutions for a growing nation.',
-  'Where precision engineering meets safe, sustainable construction.',
-  'Shaping the future through innovative civil engineering excellence.'
-]
+// import logo from '../images/kavilogo.png';
+
+const heroSlides = [hero1, hero2, hero3, hero4, hero5];
+
 
 const Counter = ({ end, suffix = '' }: { end: number; suffix?: string }) => {
   const [count, setCount] = useState(0);
@@ -32,7 +38,7 @@ const Counter = ({ end, suffix = '' }: { end: number; suffix?: string }) => {
           started.current = true;
 
           let start = 0;
-          const duration = 1600; 
+          const duration = 1600;
           const stepTime = 20;
           const increment = end / (duration / stepTime);
 
@@ -63,333 +69,263 @@ const Counter = ({ end, suffix = '' }: { end: number; suffix?: string }) => {
 };
 
 const Home: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+
+
+
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative h-[85vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            alt="Construction site" 
-            className="w-full h-full object-cover scale-105" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt1JYgoF7E4QTwNW1BRNtIQ47zWWQJ0IEyGD2Vj7umwa-59XAfaWnsNOAXnV4I1XHxnmUTegJZzenDky2Ro0sWyYLbA8-rEuP82iHf-xgsmmQLilqTt94pR2cVlnIFWmEW5cOI4Zz6jfOwwr181hXYw67K2f05t11scjbHft_qzfMRA0UrdEhQ5wMC2fDr_RDul_3O3F7wc9AkWfw8_axFU7eM3J9PnuLexAbVLjmQljqVS9s1dkHFVOaUeaPNeH49hk_Z1QkIjg" 
-          />
-          <div className="absolute inset-0 bg-slate-950/60"></div>
-        </div>
+      {/* 3. USE THE NEW HERO COMPONENT HERE */}
+      <Hero images={heroSlides} logo={logo} />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            
-            {/* Title - Cursor Removed */}
-            <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-[1.1] mb-6">
-              From Concept to Completion:{' '}
-              <span className="text-blue-400">
-                <Typewriter
-                  words={['Turning Ideas to Reality']}
-                  typeSpeed={60}
-                  // cursor and cursorStyle removed here
-                />
-              </span>
-            </h1>
-
-            {/* Tagline - Cursor Removed */}
-            <p className="text-lg md:text-xl text-slate-200 mb-10 leading-relaxed max-w-2xl min-h-[3.5rem]">
-              <Typewriter
-                words={[
-                  'Civil engineering excellence delivering precision, safety, and innovation in modern infrastructure projects across the nation.',
-                  'Building resilient infrastructure with precision, safety, and innovation.',
-                  'Engineering modern infrastructure that stands the test of time.',
-                  'Delivering reliable civil engineering solutions for a growing nation.',
-                  'Where precision engineering meets safe, sustainable construction.',
-                  'Shaping the future through innovative civil engineering excellence.'
-                ]}
-                loop={0}
-                typeSpeed={40}
-                deleteSpeed={25}
-                delaySpeed={3000}
-                // cursor and cursorStyle removed here
-              />
+      {/* Services Section */}
+      <section className="py-16 md:py-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">Our Services</h2>
+            <div className="w-16 h-1 bg-primary mx-auto mb-6"></div>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              We provide comprehensive engineering services tailored to modern infrastructural requirements, ensuring every project is built on a foundation of excellence.
             </p>
-
-            {/* Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link 
-                to="/services" 
-                className="bg-primary hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-bold 
-                flex items-center justify-center gap-2 
-                transition-all duration-300 ease-out 
-                transform will-change-transform hover:scale-105 hover:-translate-y-1
-                shadow-xl shadow-blue-500/20 hover:shadow-2xl hover:shadow-blue-500/40"
-              >
-                Our Services
-                <span className="material-symbols-outlined text-xl">arrow_forward</span>
-              </Link>
-
-              <Link 
-                to="/projects" 
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 
-                text-white px-8 py-4 rounded-lg font-bold text-center
-                transition-all duration-300 ease-out 
-                transform will-change-transform hover:scale-105 hover:-translate-y-1
-                hover:shadow-xl hover:shadow-black/30"
-              >
-                View Projects
-              </Link>
-            </div>
-
           </div>
-        </div>
-      </section>
-
-      {/* Engineering Excellence Section */}
-      <section className="py-24 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            
-            <motion.div 
-              className="space-y-8"
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-[2px] bg-blue-600"></div>
-                <span className="text-blue-600 font-bold tracking-widest text-xs uppercase">
-                  Excellence in Engineering
-                </span>
-              </div>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-                Committed to Precision and Technical Authority
-              </h2>
-              <p className="text-lg text-slate-600 leading-relaxed">
-                Kavi Consulting Inc. is a premier civil engineering and construction firm. 
-                We focus on authority, technical precision, and premium results for every infrastructure challenge. 
-                From urban transportation networks to sustainable water management, we bring decades of expertise to the table.
-              </p>
-              
-              <div className="grid sm:grid-cols-2 gap-8 pt-4">
-                <motion.div 
-                  className="space-y-3"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                  viewport={{ once: false }}
-                >
-                  <span className="material-symbols-outlined text-blue-600 text-3xl">verified_user</span>
-                  <h4 className="font-bold text-lg">Safety First</h4>
-                  <p className="text-sm text-slate-500">
-                    Uncompromising standards for public safety and operational integrity.
-                  </p>
-                </motion.div>
-                
-                <motion.div 
-                  className="space-y-3"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                  viewport={{ once: false }}
-                >
-                  <span className="material-symbols-outlined text-blue-600 text-3xl">architecture</span>
-                  <h4 className="font-bold text-lg">Innovation</h4>
-                  <p className="text-sm text-slate-500">
-                    Modern solutions for complex systems using cutting-edge technology.
-                  </p>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            <div className="relative perspective-1000">
-              <motion.div
-                className="bg-slate-50 p-4 rounded-2xl shadow-2xl relative z-10"
-                initial={{ opacity: 0, rotateY: 15, rotateX: 5, scale: 0.9 }}
-                whileInView={{ opacity: 1, rotateY: -5, rotateX: 0, scale: 1 }}
-                transition={{ duration: 1, type: "spring", bounce: 0.4 }}
-                viewport={{ once: false, amount: 0.3 }}
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                <img 
-                  alt="Technical plan" 
-                  className="rounded-xl w-full" 
-                  src= {engineering}
-                />
-              </motion.div>
-
-              <motion.div
-                className="absolute -bottom-6 -left-6 bg-blue-600 text-white p-8 rounded-xl shadow-xl max-w-[240px] z-20"
-                initial={{ opacity: 0, x: 60, y: -60, scale: 0.8 }}
-                whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
-                viewport={{ once: false }}
-              >
-                <div className="text-4xl font-extrabold mb-1">15+</div>
-                <div className="text-xs font-bold uppercase tracking-wider opacity-90">
-                  Years of Industry Leadership
-                </div>
-              </motion.div>
-              
-               <motion.div
-                className="absolute top-10 right-10 w-full h-full bg-blue-50 rounded-2xl -z-10"
-                initial={{ opacity: 0, x: 0 }}
-                whileInView={{ opacity: 1, x: 20, y: -20 }}
-                transition={{ duration: 1.2 }}
-                viewport={{ once: false }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {[
-              { label: 'Projects Completed', value: 80, suffix: '+', icon: 'apartment' },
-              { label: 'Expert Engineers', value: 24, suffix: '', icon: 'groups' },
-              { label: 'States Served', value: 12, suffix: '', icon: 'public' },
-              { label: 'Client Satisfaction', value: 100, suffix: '%', icon: 'thumb_up' },
-            ].map((stat, idx) => (
-              <div
-                key={idx}
-                className="bg-white p-10 rounded-2xl text-center shadow-sm border border-slate-100
-                hover:-translate-y-2 transition-transform duration-300"
-              >
-                <span className="material-symbols-outlined text-primary mb-4 block text-3xl">
-                  {stat.icon}
-                </span>
-
-                <Counter end={stat.value} suffix={stat.suffix} />
-
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Expertise Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16">
-            <div className="max-w-2xl space-y-4">
-              <h2 className="text-4xl font-extrabold text-slate-900">Our Core Expertise</h2>
-              <p className="text-lg text-slate-600">
-                We provide comprehensive engineering services tailored to modern infrastructural requirements, ensuring every project is built on a foundation of excellence.
-              </p>
-            </div>
-            <Link to="/services" className="inline-flex items-center gap-2 text-primary font-bold hover:underline">
-              Explore All Services
-              <span className="material-symbols-outlined">chevron_right</span>
-            </Link>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { title: 'Transportation', icon: 'directions_car', desc: 'Urban planning, highway design, and transit solutions that move communities forward with efficiency and safety.' },
-              { title: 'Drainage', icon: 'water_drop', desc: 'Sustainable storm water management and drainage systems designed to protect infrastructure and environment.' },
-              { title: 'Project Management', icon: 'assignment_turned_in', desc: 'Precision oversight from feasibility to completion, ensuring timelines and budgets are met with zero compromise.', featured: true },
+              { title: 'Feasibility Studies', path: 'feasibility-studies', icon: 'query_stats', desc: 'Comprehensive analysis and evaluation to determine project viability, risk factors, and optimization.' },
+              { title: 'Transport Engineering', path: 'transport-engineering', icon: 'traffic', desc: 'Innovative solutions for urban transit networks, highway design, and moving communities efficiently.' },
+              { title: 'Drainage Design', path: 'drainage-design', icon: 'waves', desc: 'Sustainable storm water management and drainage systems designed to protect infrastructure.' },
+              { title: 'Utility Design', path: 'utility-design', icon: 'plumbing', desc: 'Designing resilient, functional utility systems that power, supply, and support modern communities.' },
+              { title: 'Construction', path: 'construction', icon: 'engineering', desc: 'Expert construction services delivering safety, technical precision, and premium quality at every phase.' },
+              { title: 'District Engineering', path: 'district-engineering', icon: 'account_balance', desc: 'Providing comprehensive engineering solutions for municipal utility districts and levee improvement groups.' },
+              { title: 'Site Development', path: 'site-development', icon: 'landscape', desc: 'Transforming raw land into functional, code-compliant, and fully optimized sites.' },
+              { title: 'Program Management', path: 'program-management', icon: 'account_tree', desc: 'Strategic oversight from feasibility to completion, ensuring budgets and timelines are met seamlessly.' },
             ].map((item, idx) => (
-              <div 
-                key={idx} 
-                className={`group p-8 rounded-2xl border transition-all transform will-change-transform duration-300 ${
-                  item.featured 
-                  ? 'bg-white border-primary/10 shadow-xl ring-1 ring-primary/5 hover:scale-105' 
-                  : 'border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-xl hover:scale-105'
-                }`}
+              <Link
+                key={idx}
+                to={`/services#${item.path}`}
+                className="group bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 transform will-change-transform flex flex-col h-full text-left"
               >
-                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-8 ${item.featured ? 'bg-primary text-white' : 'bg-blue-100 text-primary'}`}>
+                <div className="w-14 h-14 bg-blue-50 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                   <span className="material-symbols-outlined text-3xl">{item.icon}</span>
                 </div>
-                <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
-                <p className="text-slate-600 leading-relaxed mb-8">{item.desc}</p>
-                <div className={`h-1 transition-all duration-300 ${item.featured ? 'w-full bg-primary' : 'w-12 bg-slate-200 group-hover:w-full group-hover:bg-primary'}`}></div>
-              </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">{item.desc}</p>
+                <div className="mt-auto h-1 w-12 bg-slate-200 group-hover:w-full group-hover:bg-primary transition-all duration-300"></div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Projects Carousel */}
-      <section className="py-24 bg-slate-50/50 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
-          <h2 className="text-4xl font-extrabold text-slate-900">Featured Projects</h2>
-        </div>
+      {/* Certifications Section */}
+      <section className="py-16 md:py-24 bg-white border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">Certifications</h2>
+            <div className="w-16 h-1 bg-primary mx-auto mb-6"></div>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              Our commitment to excellence is recognized through industry-leading certifications and structural standards.
+            </p>
+          </div>
 
-        {(() => {
-          const projects = [
-            { title: 'Metropolitan Center', category: 'Structural Design & Management', img: metropolitan },
-            { title: 'River Crossing', category: 'Bridge Engineering', img: River },
-            { title: 'Urban Interchange', category: 'Traffic Systems Design', img: urban },
-            { title: 'Grand Parkway Segment E', category: 'Toll Road Infrastructure', img: grandparking },
-            { title: 'Post Oak Boulevard', category: 'Urban Transit Reconstruction', img: postoak },
-          ];
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+            {/* Left Div (Certificates Display) */}
+            <div className="flex-1 space-y-8">
+              {/* 2x2 Certifications Grid */}
+              <div className="bg-[#f8faff] p-6 sm:p-10 rounded-[2.5rem] border border-[#edf2f7] shadow-sm grid grid-cols-2 gap-4 sm:gap-6 relative overflow-hidden w-full max-w-2xl h-full min-h-[300px] flex-1">
+                {/* Background blob for texture */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
 
-          return (
-            <div className="relative w-full">
-              <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory md:overflow-hidden carousel-track pb-6 md:pb-0 hide-scrollbar">
-                {projects.map((project, idx) => (
-                  <div 
-                    key={`original-${idx}`} 
-                    className="relative flex-shrink-0 w-[300px] sm:w-[360px] md:w-[460px] h-[220px] sm:h-[280px] md:h-[320px] rounded-3xl overflow-hidden snap-center group shadow-lg"
-                  >
-                    <img alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={project.img} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-                    <div className="absolute bottom-6 left-6 whitespace-normal">
-                      <h4 className="text-xl sm:text-2xl font-bold text-white mb-1">{project.title}</h4>
-                      <p className="text-slate-300 text-xs sm:text-sm">{project.category}</p>
-                    </div>
-                  </div>
-                ))}
+                {/* MBE Card */}
+                <div className="bg-white rounded-[24px] flex flex-col items-center justify-center py-8 px-4 sm:py-10 sm:px-6 text-center shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 border border-black/5 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+                  <h3 className="text-3xl sm:text-[2.25rem] font-extrabold text-[#2b6cb0] mb-2 sm:mb-3 tracking-tight leading-none">MBE</h3>
+                  <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] text-[#718096] max-w-[160px] leading-relaxed">Minority Business Enterprise</p>
+                </div>
 
-                {projects.map((project, idx) => (
-                  <div 
-                    key={`duplicate-${idx}`} 
-                    className="hidden md:block relative flex-shrink-0 w-[300px] sm:w-[360px] md:w-[460px] h-[220px] sm:h-[280px] md:h-[320px] rounded-3xl overflow-hidden snap-center group shadow-lg"
-                    aria-hidden="true" 
-                  >
-                    <img alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={project.img} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-                    <div className="absolute bottom-6 left-6 whitespace-normal">
-                      <h4 className="text-xl sm:text-2xl font-bold text-white mb-1">{project.title}</h4>
-                      <p className="text-slate-300 text-xs sm:text-sm">{project.category}</p>
-                    </div>
-                  </div>
-                ))}
+                {/* DBE Card */}
+                <div className="bg-white rounded-[24px] flex flex-col items-center justify-center py-8 px-4 sm:py-10 sm:px-6 text-center shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 border border-black/5 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+                  <h3 className="text-3xl sm:text-[2.25rem] font-extrabold text-[#2b6cb0] mb-2 sm:mb-3 tracking-tight leading-none">DBE</h3>
+                  <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] text-[#718096] max-w-[160px] leading-relaxed">Disadvantaged Business Enterprise</p>
+                </div>
+
+                {/* HUB Card */}
+                <div className="bg-white rounded-[24px] flex flex-col items-center justify-center py-8 px-4 sm:py-10 sm:px-6 text-center shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 border border-black/5 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+                  <h3 className="text-3xl sm:text-[2.25rem] font-extrabold text-[#2b6cb0] mb-2 sm:mb-3 tracking-tight leading-none">HUB</h3>
+                  <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] text-[#718096] max-w-[160px] leading-relaxed">Historically Underutilized Business</p>
+                </div>
+
+                {/* Blue Highlight Card */}
+                <div className="bg-[#2b6cb0] text-white rounded-[24px] flex flex-col items-center justify-center py-8 px-4 sm:py-10 sm:px-6 text-center shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 border border-transparent hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+                  <span className="material-symbols-outlined text-[3rem] sm:text-[3.5rem] mb-4 sm:mb-6" style={{ fontVariationSettings: "'FILL' 0, 'wght' 400" }}>verified</span>
+                  <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] text-white leading-relaxed">Certified Performance</p>
+                </div>
               </div>
             </div>
-          );
-        })()}
+
+            {/* Right Div (Scrollable Certificate List) */}
+            <div className="flex-1 lg:max-w-[450px] relative mt-8 lg:mt-0 min-h-[400px] lg:min-h-[500px]">
+              <div className="lg:absolute lg:inset-0 bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden flex flex-col h-full lg:h-auto max-h-[500px] lg:max-h-none">
+                <div className="bg-slate-50 px-8 py-5 border-b border-slate-100 flex items-center gap-3">
+                  <span className="material-symbols-outlined text-primary">verified</span>
+                  <h3 className="text-xl font-bold text-slate-900">TxDOT Certifications</h3>
+                </div>
+
+                {/* Scrollable Container */}
+                <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                  <ul className="space-y-2">
+                    {Array.from({ length: 15 }).map((_, idx) => (
+                      <li key={idx} className="flex items-start gap-4 p-4 hover:bg-slate-50 rounded-xl transition-all border border-transparent hover:border-slate-100 cursor-default">
+                        <div className="w-8 h-8 rounded-full bg-blue-50 text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="material-symbols-outlined text-sm font-bold">check</span>
+                        </div>
+                        <div>
+                          <p className="font-bold text-slate-800 text-sm">Certificate Placeholder {(idx + 1).toString().padStart(2, '0')}</p>
+                          <p className="text-xs text-slate-500 mt-1">Issued by Regulating Authority</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Us Section */}
+      <section className="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
+        {/* Background Accents */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl -ml-20 -mb-20"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col md:flex-row">
+
+            {/* Contact Info Sidebar */}
+            <div className="md:w-1/3 bg-primary text-white p-6 sm:p-10 flex flex-col justify-between">
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">Contact Us</h2>
+                <p className="text-blue-100 mb-8 text-sm leading-relaxed">
+                  Ready to start your next project? Reach out to our engineering technical staff today.
+                </p>
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <span className="material-symbols-outlined text-blue-300">location_on</span>
+                    <div>
+                      <p className="font-semibold text-sm">Headquarters</p>
+                      <p className="text-blue-100 text-sm mt-1">123 Engineering Blvd<br />Suite 400<br />Houston, TX 77001</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <span className="material-symbols-outlined text-blue-300">mail</span>
+                    <div>
+                      <p className="font-semibold text-sm">Email</p>
+                      <p className="text-blue-100 text-sm mt-1">info@kaviconsulting.com</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <span className="material-symbols-outlined text-blue-300">call</span>
+                    <div>
+                      <p className="font-semibold text-sm">Phone</p>
+                      <p className="text-blue-100 text-sm mt-1">(555) 123-4567</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Form Area */}
+            <div className="md:w-2/3 p-6 sm:p-10">
+              <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert('Thank you! Your inquiry has been sent.'); }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="text-sm font-semibold text-slate-700">Full Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      required
+                      className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
+                      placeholder="John Doe"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="phone" className="text-sm font-semibold text-slate-700">Phone Number</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      required
+                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                      className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
+                      placeholder="123-456-7890"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-semibold text-slate-700">Email Address</label>
+                  <input
+                    type="email"
+                    id="email"
+                    required
+                    className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
+                    placeholder="john@example.com"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="address" className="text-sm font-semibold text-slate-700">Address</label>
+                  <input
+                    type="text"
+                    id="address"
+                    required
+                    className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
+                    placeholder="Provide your location or project address"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="message" className="text-sm font-semibold text-slate-700">Message</label>
+                  <textarea
+                    id="message"
+                    required
+                    rows={4}
+                    className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm resize-none"
+                    placeholder="How can we help you?"
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                >
+                  Send Inquiry
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
 
         <style>
           {`
-            .hide-scrollbar::-webkit-scrollbar { display: none; }
-            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-            @keyframes scroll-left-loop {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); } 
+            .custom-scrollbar::-webkit-scrollbar {
+              width: 6px;
             }
-
-            @media (min-width: 768px) {
-              .carousel-track {
-                width: max-content;
-                animation: scroll-left-loop 40s linear infinite;
-              }
-              .carousel-track:hover {
-                animation-play-state: paused;
-              }
+            .custom-scrollbar::-webkit-scrollbar-track {
+              background: #f1f5f9;
+              border-radius: 8px;
             }
-            
-            @media (max-width: 767px) {
-              .carousel-track {
-                width: 100%;
-                animation: none;
-              }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+              background: #cbd5e1;
+              border-radius: 8px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+              background: #94a3b8;
             }
           `}
         </style>
       </section>
+
     </div>
   );
 };

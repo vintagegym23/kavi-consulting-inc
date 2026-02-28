@@ -1,0 +1,20 @@
+/* Custom styles for Kavi Consulting Inc */
+@layer base {
+  :root {
+    --primary: #2B6CB0;
+    --primary-dark: #2C5282;
+    --primary-light: #4299E1;
+  }
+}
+
+/* Marquee animation for the Partners strip */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 20s linear infinite;
+}

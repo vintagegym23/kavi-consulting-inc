@@ -1,385 +1,463 @@
-// 
-
-// import React, { useState } from 'react';
-
-// const Projects: React.FC = () => {
-//   const [filter, setFilter] = useState('All');
-
-//   const categories = ['All', 'Transportation', 'Drainage', 'Utilities', 'TxDOT'];
-  
-//   const allProjects = [
-//     { 
-//       title: 'US 69 Corridor Improvement', 
-//       client: 'TxDOT', 
-//       tags: ['TxDOT', 'Transportation'], 
-//       desc: 'Strategic expansion and modernization of the primary urban corridor.',
-//       img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqSfdbPKboTLF1TWSgTAfkO4yfCvmYMwvn-vjlqXmSiIWDaQ0ftQ-tbXh0BmEw4LXjZoC2hHnan9TJimmpDBNXk6TTN3fxDH402l7tKasYL9re_L0iFL7J977CWMj7QBhkBrudo_WdjPvFDzSbR-Qqh4Oj4tXttcLZr28DXpLsae4tuLXJhOn_10sNJn6h14GkkdKdTyJGvG8KpeW3iDM8YK_9S1-eAqPf-2huO0MT2zE5Z2us7KJK0i_5Qwb7ljy-tYQDLYR2KA' 
-//     },
-//     { 
-//       title: 'Kirkwood/Briar Forest Drainage', 
-//       client: 'City of Houston', 
-//       tags: ['City of Houston', 'Drainage'], 
-//       desc: 'Comprehensive storm-water management system to mitigate regional flooding.',
-//       img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCI2oItfvWX0uFD2JRRCNXeoEHogJlYCJbn8tHhRKMPGDNaZ2u4nNInWGIMGuJmXAlCx_8YJI808y3k12fsTZSrl2DJSyhRDoQ6-tg4eOZbnqP9Ed0iwCcSKUVkq2LkW6f0WjKL6dD-oNcL3sFpbaYTqckfW8yyF2GADYWkrfZ7HQ6OdZnsLpRSEypextz-lQd6FaM8NXYVDSa2qNUEuOCThPymbuk2w5xSBatJE-H5iuDBl1itZ8K0oHfbQDpcN7-NbwjRtt05Qg' 
-//     },
-//     { 
-//       title: 'Post Oak Boulevard', 
-//       client: 'Uptown TIRZ', 
-//       tags: ['Uptown Houston', 'Transportation'], 
-//       desc: 'Modern transit-oriented development and reconstruction of iconic Uptown boulevard.',
-//       img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDKTTbIZJuQcMqNabEBeeT4eEi-dCn-AyXpqW8M9MVhvAY8uj_VfSjrN_rC2WkDY_woj0qIii0DaHiawKSTLghXIexRrgnSeBLniJkC5hrObCrzqCM6sw7jEQabzXuIhT09KPkf-cQtVTS0H3Sp_XT8Z7YjJb0m4q7xn0bGpHfjCLEQqcjjA6oVeqIUnF8PrIsKweLK6DZz26H33SOJcEebEgN5iF7cBz5mD-UaWqQ9H8USd5xZnxLB6Ub558q6V8PO_MUL09wjtg' 
-//     },
-//     { 
-//       title: 'Grand Parkway Segment E', 
-//       client: 'TxDOT', 
-//       tags: ['TxDOT', 'Utilities'], 
-//       desc: 'Infrastructure design and utility coordination for major highway outer loop.',
-//       img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDt1JYgoF7E4QTwNW1BRNtIQ47zWWQJ0IEyGD2Vj7umwa-59XAfaWnsNOAXnV4I1XHxnmUTegJZzenDky2Ro0sWyYLbA8-rEuP82iHf-xgsmmQLilqTt94pR2cVlnIFWmEW5cOI4Zz6jfOwwr181hXYw67K2f05t11scjbHft_qzfMRA0UrdEhQ5wMC2fDr_RDul_3O3F7wc9AkWfw8_axFU7eM3J9PnuLexAbVLjmQljqVS9s1dkHFVOaUeaPNeH49hk_Z1QkIjg' 
-//     },
-//     { 
-//       title: 'Transit Center Hub', 
-//       client: 'METRO', 
-//       tags: ['METRO', 'Transportation'], 
-//       desc: 'Intermodal transportation facility design and pedestrian accessibility project.',
-//       img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBieqw-z75VL-pV2xZFQD6-h_xu_9ZbWLgKYh2ibmAXX3KUMW9i_n3TQ3-C6Pz30phaYd116pbNy4TyQ-23tgmb21FzbuXwbqig_a9syJ0gUF54TmZ0_di842BchNdCL_IcHCvCa0GbSzfK-rvRenPHYBsaPUaUYP-wbXG1f-vDBr6bdNRroYQsewg0VhM95eisGBi1r5G1DoD1cWassj9vsTUfL_MFIjTyHYrSp6PUCLlMhyd2FiaDcrEFvdIipXEYRNJZ_ew72g' 
-//     },
-//     { 
-//       title: 'Cartwright Roadway Improvements', 
-//       client: 'Fort Bend County', 
-//       tags: ['Fort Bend County', 'Transportation'], 
-//       desc: 'Reconstruction of a 4-lane roadway with associated H&H analysis and TxDOT coordination.',
-//       img: 'https://images.unsplash.com/photo-1545147418-409e4573bc2b?auto=format&fit=crop&q=80&w=1200'
-//     },
-//     { 
-//       title: 'Bissonnet Paving & Drainage', 
-//       client: 'City of Houston', 
-//       tags: ['City of Houston', 'Drainage'], 
-//       desc: 'Roadway reconstruction and drainage impact analysis with federal compliance.',
-//       img: 'https://images.unsplash.com/photo-1541888941259-7907ff14e944?auto=format&fit=crop&q=80&w=1200'
-//     },
-//     { 
-//       title: 'Q-134 Basin Analysis', 
-//       client: 'HCFCD', 
-//       tags: ['Harris County', 'Drainage'], 
-//       desc: 'Regional detention and channel design utilizing HEC-RAS 2D and Atlas 14 hydrology.',
-//       img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200'
-//     },
-//     { 
-//       title: 'Wycliffe Drainage Improvements', 
-//       client: 'City of Houston', 
-//       tags: ['City of Houston', 'Drainage'], 
-//       desc: 'Comprehensive drainage, paving, and utility design including traffic control and SWPPP.',
-//       img: 'https://images.unsplash.com/photo-1590486803833-ffc6f98fb17a?auto=format&fit=crop&q=80&w=1200'
-//     },
-//     { 
-//       title: 'Bridge Scour Analysis', 
-//       client: 'TxDOT', 
-//       tags: ['TxDOT', 'Transportation'], 
-//       desc: 'Hydraulic modeling and inspections for 200+ bridges for mitigation recommendations.',
-//       img: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&q=80&w=1200'
-//     }
-//   ];
-
-//   const filteredProjects = filter === 'All' 
-//     ? allProjects 
-//     : allProjects.filter(p => p.tags.includes(filter));
-
-//   return (
-//     <div className="bg-white">
-//       {/* Portfolio Hero */}
-//       <section className="relative h-[40vh] min-h-[300px] flex items-center overflow-hidden">
-//         <div className="absolute inset-0">
-//           <img alt="Bridge" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBieqw-z75VL-pV2xZFQD6-h_xu_9ZbWLgKYh2ibmAXX3KUMW9i_n3TQ3-C6Pz30phaYd116pbNy4TyQ-23tgmb21FzbuXwbqig_a9syJ0gUF54TmZ0_di842BchNdCL_IcHCvCa0GbSzfK-rvRenPHYBsaPUaUYP-wbXG1f-vDBr6bdNRroYQsewg0VhM95eisGBi1r5G1DoD1cWassj9vsTUfL_MFIjTyHYrSp6PUCLlMhyd2FiaDcrEFvdIipXEYRNJZ_ew72g" />
-//           <div className="absolute inset-0 bg-slate-950/70"></div>
-//         </div>
-//         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-//           <nav className="flex mb-4 text-blue-400 text-sm font-bold uppercase tracking-widest gap-2 items-center">
-//             <span>Home</span>
-//             <span className="material-symbols-outlined text-xs">chevron_right</span>
-//             <span>Portfolio</span>
-//           </nav>
-//           <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
-//             Infrastructure <span className="text-blue-400">Portfolio</span>
-//           </h1>
-//         </div>
-//       </section>
-
-//       {/* Filter Bar */}
-//       <section className="py-8 bg-white border-b border-slate-100 sticky top-20 z-40">
-//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-//             <div className="flex flex-wrap items-center gap-2">
-//               {categories.map((cat) => (
-//                 <button 
-//                   key={cat}
-//                   onClick={() => setFilter(cat)}
-//                   className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${
-//                     filter === cat ? 'bg-primary text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'
-//                   }`}
-//                 >
-//                   {cat}
-//                 </button>
-//               ))}
-//             </div>
-
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* Portfolio Grid - Standard Grid for Uniform Sizes */}
-//       <section className="py-20 bg-slate-50">
-//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-//             {filteredProjects.map((project, idx) => (
-//               <div key={idx} className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 h-full">
-//                 <div className="relative overflow-hidden aspect-[4/3] flex-shrink-0">
-//                   <img alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={project.img} />
-//                 </div>
-//                 <div className="p-6 flex flex-col flex-grow">
-//                   <div className="flex flex-wrap gap-2 mb-3">
-//                     {project.tags.map(tag => (
-//                       <span key={tag} className="text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-primary px-2 py-0.5 rounded">
-//                         {tag}
-//                       </span>
-//                     ))}
-//                   </div>
-//                   <h3 className="text-xl font-extrabold text-slate-900 mb-2">{project.title}</h3>
-//                   {/* line-clamp-2 ensures consistent text height */}
-//                   <p className="text-sm text-slate-500 mb-4 line-clamp-2 flex-grow">{project.desc}</p>
-//                   <div className="flex items-center justify-between pt-4 border-t border-slate-50 mt-auto">
-//                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Client: {project.client}</span>
-//                   </div>
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//           <div className="mt-20 text-center">
-//             <button className="inline-flex items-center gap-2 bg-white text-slate-900 px-8 py-3 rounded-full font-bold border border-slate-200 hover:bg-slate-50 transition-all shadow-sm">
-//               Load More Projects
-//               <span className="material-symbols-outlined">expand_more</span>
-//             </button>
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* Partners Marquee */}
-//       <section className="py-20 bg-white border-t border-slate-100 overflow-hidden">
-//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
-//           <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400 mb-4">Trusted By Industry Leaders</h2>
-//         </div>
-//         <div className="relative overflow-hidden whitespace-nowrap">
-//           <div className="flex items-center gap-24 animate-marquee grayscale opacity-50">
-//             {['HARRIS COUNTY', 'METRO', 'FEMA', 'CITY OF HOUSTON', 'TxDOT', 'Uptown TIRZ'].map((p, i) => (
-//               <span key={i} className="text-2xl font-black text-slate-900 whitespace-nowrap">{p}</span>
-//             ))}
-//             {['HARRIS COUNTY', 'METRO', 'FEMA', 'CITY OF HOUSTON', 'TxDOT', 'Uptown TIRZ'].map((p, i) => (
-//               <span key={`dup-${i}`} className="text-2xl font-black text-slate-900 whitespace-nowrap">{p}</span>
-//             ))}
-//           </div>
-//         </div>
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default Projects;
-
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { projects, FILTER_CATEGORIES, type Project, type ProjectCategory } from '../src/data/projects';
 
-const Projects: React.FC = () => {
-  const [filter, setFilter] = useState('All');
-  const [visibleCount, setVisibleCount] = useState(6);
+// ─── Category colour tokens ──────────────────────────────────────────────────
+const CATEGORY_STYLES: Record<
+  ProjectCategory,
+  { badge: string; activeBg: string; gradient: string; icon: string }
+> = {
+  'Transportation & Roadway': {
+    badge: 'bg-blue-100 text-blue-700',
+    activeBg: 'bg-blue-600 text-white border-blue-600',
+    gradient: 'from-blue-700 to-blue-900',
+    icon: 'road',
+  },
+  'Drainage & Stormwater': {
+    badge: 'bg-cyan-100 text-cyan-700',
+    activeBg: 'bg-cyan-600 text-white border-cyan-600',
+    gradient: 'from-cyan-600 to-cyan-900',
+    icon: 'water',
+  },
+  'Hydraulic Engineering': {
+    badge: 'bg-indigo-100 text-indigo-700',
+    activeBg: 'bg-indigo-600 text-white border-indigo-600',
+    gradient: 'from-indigo-600 to-indigo-900',
+    icon: 'waves',
+  },
+  'Infrastructure Assessment': {
+    badge: 'bg-amber-100 text-amber-700',
+    activeBg: 'bg-amber-500 text-white border-amber-500',
+    gradient: 'from-amber-500 to-amber-800',
+    icon: 'search_insights',
+  },
+  'Capital Improvement': {
+    badge: 'bg-emerald-100 text-emerald-700',
+    activeBg: 'bg-emerald-600 text-white border-emerald-600',
+    gradient: 'from-emerald-600 to-emerald-900',
+    icon: 'construction',
+  },
+};
 
-  const categories = ['All', 'Transportation', 'Drainage', 'Utilities', 'TxDOT'];
-  
-  const allProjects = [
-    { 
-      title: 'US 69 Corridor Improvement', 
-      client: 'TxDOT', 
-      tags: ['TxDOT', 'Transportation'], 
-      desc: 'Strategic expansion and modernization of the primary urban corridor.',
-      img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqSfdbPKboTLF1TWSgTAfkO4yfCvmYMwvn-vjlqXmSiIWDaQ0ftQ-tbXh0BmEw4LXjZoC2hHnan9TJimmpDBNXk6TTN3fxDH402l7tKasYL9re_L0iFL7J977CWMj7QBhkBrudo_WdjPvFDzSbR-Qqh4Oj4tXttcLZr28DXpLsae4tuLXJhOn_10sNJn6h14GkkdKdTyJGvG8KpeW3iDM8YK_9S1-eAqPf-2huO0MT2zE5Z2us7KJK0i_5Qwb7ljy-tYQDLYR2KA' 
-    },
-    { 
-      title: 'Kirkwood/Briar Forest Drainage', 
-      client: 'City of Houston', 
-      tags: ['City of Houston', 'Drainage'], 
-      desc: 'Comprehensive storm-water management system to mitigate regional flooding.',
-      img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCI2oItfvWX0uFD2JRRCNXeoEHogJlYCJbn8tHhRKMPGDNaZ2u4nNInWGIMGuJmXAlCx_8YJI808y3k12fsTZSrl2DJSyhRDoQ6-tg4eOZbnqP9Ed0iwCcSKUVkq2LkW6f0WjKL6dD-oNcL3sFpbaYTqckfW8yyF2GADYWkrfZ7HQ6OdZnsLpRSEypextz-lQd6FaM8NXYVDSa2qNUEuOCThPymbuk2w5xSBatJE-H5iuDBl1itZ8K0oHfbQDpcN7-NbwjRtt05Qg' 
-    },
-    { 
-      title: 'Post Oak Boulevard', 
-      client: 'Uptown TIRZ', 
-      tags: ['Uptown Houston', 'Transportation'], 
-      desc: 'Modern transit-oriented development and reconstruction of iconic Uptown boulevard.',
-      img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDKTTbIZJuQcMqNabEBeeT4eEi-dCn-AyXpqW8M9MVhvAY8uj_VfSjrN_rC2WkDY_woj0qIii0DaHiawKSTLghXIexRrgnSeBLniJkC5hrObCrzqCM6sw7jEQabzXuIhT09KPkf-cQtVTS0H3Sp_XT8Z7YjJb0m4q7xn0bGpHfjCLEQqcjjA6oVeqIUnF8PrIsKweLK6DZz26H33SOJcEebEgN5iF7cBz5mD-UaWqQ9H8USd5xZnxLB6Ub558q6V8PO_MUL09wjtg' 
-    },
-    { 
-      title: 'Grand Parkway Segment E', 
-      client: 'TxDOT', 
-      tags: ['TxDOT', 'Utilities'], 
-      desc: 'Infrastructure design and utility coordination for major highway outer loop.',
-      img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDt1JYgoF7E4QTwNW1BRNtIQ47zWWQJ0IEyGD2Vj7umwa-59XAfaWnsNOAXnV4I1XHxnmUTegJZzenDky2Ro0sWyYLbA8-rEuP82iHf-xgsmmQLilqTt94pR2cVlnIFWmEW5cOI4Zz6jfOwwr181hXYw67K2f05t11scjbHft_qzfMRA0UrdEhQ5wMC2fDr_RDul_3O3F7wc9AkWfw8_axFU7eM3J9PnuLexAbVLjmQljqVS9s1dkHFVOaUeaPNeH49hk_Z1QkIjg' 
-    },
-    { 
-      title: 'Transit Center Hub', 
-      client: 'METRO', 
-      tags: ['METRO', 'Transportation'], 
-      desc: 'Intermodal transportation facility design and pedestrian accessibility project.',
-      img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBieqw-z75VL-pV2xZFQD6-h_xu_9ZbWLgKYh2ibmAXX3KUMW9i_n3TQ3-C6Pz30phaYd116pbNy4TyQ-23tgmb21FzbuXwbqig_a9syJ0gUF54TmZ0_di842BchNdCL_IcHCvCa0GbSzfK-rvRenPHYBsaPUaUYP-wbXG1f-vDBr6bdNRroYQsewg0VhM95eisGBi1r5G1DoD1cWassj9vsTUfL_MFIjTyHYrSp6PUCLlMhyd2FiaDcrEFvdIipXEYRNJZ_ew72g' 
-    },
-    { 
-      title: 'Cartwright Roadway Improvements', 
-      client: 'Fort Bend County', 
-      tags: ['Fort Bend County', 'Transportation'], 
-      desc: 'Reconstruction of a 4-lane roadway with associated H&H analysis and TxDOT coordination.',
-      img: 'https://images.unsplash.com/photo-1545147418-409e4573bc2b?auto=format&fit=crop&q=80&w=1200'
-    },
-    { 
-      title: 'Bissonnet Paving & Drainage', 
-      client: 'City of Houston', 
-      tags: ['City of Houston', 'Drainage'], 
-      desc: 'Roadway reconstruction and drainage impact analysis with federal compliance.',
-      img: 'https://images.unsplash.com/photo-1541888941259-7907ff14e944?auto=format&fit=crop&q=80&w=1200'
-    },
-    { 
-      title: 'Q-134 Basin Analysis', 
-      client: 'HCFCD', 
-      tags: ['Harris County', 'Drainage'], 
-      desc: 'Regional detention and channel design utilizing HEC-RAS 2D and Atlas 14 hydrology.',
-      img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200'
-    },
-    { 
-      title: 'Wycliffe Drainage Improvements', 
-      client: 'City of Houston', 
-      tags: ['City of Houston', 'Drainage'], 
-      desc: 'Comprehensive drainage, paving, and utility design including traffic control and SWPPP.',
-      img: 'https://images.unsplash.com/photo-1590486803833-ffc6f98fb17a?auto=format&fit=crop&q=80&w=1200'
-    },
-    { 
-      title: 'Bridge Scour Analysis', 
-      client: 'TxDOT', 
-      tags: ['TxDOT', 'Transportation'], 
-      desc: 'Hydraulic modeling and inspections for 200+ bridges for mitigation recommendations.',
-      img: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&q=80&w=1200'
-    }
-  ];
+// Fallback for "All Projects" filter active button
+const ALL_ACTIVE = 'bg-primary text-white border-primary';
 
-  // 1. Filter the projects based on category
-  const filteredList = filter === 'All' 
-    ? allProjects 
-    : allProjects.filter(p => p.tags.includes(filter));
+// ─── ProjectCard ─────────────────────────────────────────────────────────────
+interface ProjectCardProps {
+  project: Project;
+  onViewDetails: (p: Project) => void;
+}
 
-  // 2. Reset visible count whenever filter changes
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, onViewDetails }) => {
+  const primary = project.categories[0];
+  const style = CATEGORY_STYLES[primary];
+
+  return (
+    <article className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
+      {/* Placeholder thumbnail */}
+      <div
+        className={`relative flex-shrink-0 h-40 bg-gradient-to-br ${style.gradient} flex items-center justify-center overflow-hidden`}
+        aria-hidden="true"
+      >
+        {/* Decorative grid overlay */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
+          }}
+        />
+        <span
+          className="material-symbols-outlined text-white opacity-30 select-none"
+          style={{ fontSize: 72 }}
+        >
+          {style.icon}
+        </span>
+      </div>
+
+      {/* Card body */}
+      <div className="flex flex-col flex-grow p-6">
+        {/* Category badges */}
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {project.categories.map((cat) => (
+            <span
+              key={cat}
+              className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${CATEGORY_STYLES[cat].badge}`}
+            >
+              {cat}
+            </span>
+          ))}
+        </div>
+
+        {/* Title */}
+        <h3 className="text-lg font-extrabold text-slate-900 leading-snug mb-1 group-hover:text-primary transition-colors">
+          {project.title}
+        </h3>
+
+        {/* Client */}
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
+          Client: <span className="text-primary normal-case tracking-normal font-semibold">{project.client}</span>
+        </p>
+
+        {/* Description */}
+        <p className="text-sm text-slate-600 leading-relaxed line-clamp-3 flex-grow mb-4">
+          {project.description}
+        </p>
+
+        {/* Footer */}
+        <div className="mt-auto pt-4 border-t border-slate-100">
+          <button
+            onClick={() => onViewDetails(project)}
+            className="w-full flex items-center justify-center gap-2 text-sm font-bold text-primary hover:text-white hover:bg-primary border border-primary/30 hover:border-primary px-4 py-2.5 rounded-xl transition-all duration-200"
+            aria-label={`View details for ${project.title}`}
+          >
+            <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+            View Details
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+};
+
+// ─── ProjectModal ─────────────────────────────────────────────────────────────
+interface ProjectModalProps {
+  project: Project;
+  onClose: () => void;
+}
+
+const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
+  const primary = project.categories[0];
+  const style = CATEGORY_STYLES[primary];
+
+  // Close on Escape key
   useEffect(() => {
-    setVisibleCount(6);
-  }, [filter]);
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [onClose]);
 
-  // 3. Increment visibility on button click
-  const handleLoadMore = () => {
-    setVisibleCount(prev => prev + 6);
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-sm"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-project-title"
+    >
+      <div className="bg-white w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl animate-[fadeIn_0.2s_ease-out]">
+        {/* Modal header / thumbnail */}
+        <div className={`relative h-32 bg-gradient-to-br ${style.gradient} flex items-center px-8`}>
+          <div
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+            }}
+          />
+          <div className="relative z-10 flex-1">
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {project.categories.map((cat) => (
+                <span
+                  key={cat}
+                  className="text-[10px] font-bold uppercase tracking-wider bg-white/20 text-white px-2 py-0.5 rounded-full border border-white/30"
+                >
+                  {cat}
+                </span>
+              ))}
+            </div>
+            <h2
+              id="modal-project-title"
+              className="text-xl md:text-2xl font-extrabold text-white leading-tight"
+            >
+              {project.title}
+            </h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="relative z-10 ml-4 flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/35 text-white transition-colors"
+            aria-label="Close modal"
+          >
+            <span className="material-symbols-outlined text-[20px]">close</span>
+          </button>
+        </div>
+
+        {/* Modal body */}
+        <div className="p-8">
+          {/* Client */}
+          <div className="flex items-center gap-2 mb-5">
+            <span className="material-symbols-outlined text-primary text-[18px]">business</span>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Client</span>
+            <span className="text-sm font-semibold text-slate-800 ml-1">{project.client}</span>
+          </div>
+
+          {/* Description */}
+          <p className="text-slate-600 text-sm leading-relaxed mb-6">{project.description}</p>
+
+          {/* Deliverables */}
+          <div>
+            <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-[0.12em] mb-3 flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary text-[16px]">checklist</span>
+              Key Deliverables
+            </h3>
+            <ul className="space-y-2.5">
+              {project.deliverables.map((item, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm text-slate-700">
+                  <span className="material-symbols-outlined text-primary flex-shrink-0 mt-0.5 text-[16px]">
+                    check_circle
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Actions */}
+          <div className="mt-8 pt-6 border-t border-slate-100 flex gap-3 justify-end">
+            <button
+              onClick={onClose}
+              className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors"
+            >
+              Close
+            </button>
+            <Link
+              to="/contact"
+              onClick={onClose}
+              className="px-5 py-2.5 rounded-xl text-sm font-bold bg-primary text-white hover:bg-primary-dark transition-colors"
+            >
+              Discuss This Project
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Stats data ───────────────────────────────────────────────────────────────
+const STATS = [
+  { icon: 'folder_open', value: '14+', label: 'Projects Completed' },
+  { icon: 'water_pump', value: '200,000+', label: 'LF Storm Sewer Designed' },
+  { icon: 'water', value: '30+', label: 'Stream Crossings Analyzed' },
+  { icon: 'bridge', value: '200', label: 'Bridges Assessed for Scour' },
+  { icon: 'history_edu', value: '80+', label: 'Years Combined Experience' },
+  { icon: 'verified', value: 'MBE · DBE · HUB', label: 'Certified' },
+];
+
+// ─── Main page ────────────────────────────────────────────────────────────────
+const Projects: React.FC = () => {
+  const [activeFilter, setActiveFilter] = useState('All Projects');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  const filteredProjects =
+    activeFilter === 'All Projects'
+      ? projects
+      : projects.filter((p) =>
+          p.categories.includes(activeFilter as ProjectCategory)
+        );
+
+  // Dynamically derive per-category counts for the filter buttons
+  const countForCategory = (cat: string): number =>
+    cat === 'All Projects'
+      ? projects.length
+      : projects.filter((p) => p.categories.includes(cat as ProjectCategory)).length;
+
+  const filterButtonClass = (cat: string): string => {
+    const isActive = activeFilter === cat;
+    if (!isActive) return 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:border-slate-300';
+    if (cat === 'All Projects') return `${ALL_ACTIVE} border`;
+    const style = CATEGORY_STYLES[cat as ProjectCategory];
+    return style ? `${style.activeBg} border` : `${ALL_ACTIVE} border`;
   };
 
   return (
     <div className="bg-white">
-      {/* Portfolio Hero */}
-      <section className="relative h-[40vh] min-h-[300px] flex items-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img alt="Bridge" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBieqw-z75VL-pV2xZFQD6-h_xu_9ZbWLgKYh2ibmAXX3KUMW9i_n3TQ3-C6Pz30phaYd116pbNy4TyQ-23tgmb21FzbuXwbqig_a9syJ0gUF54TmZ0_di842BchNdCL_IcHCvCa0GbSzfK-rvRenPHYBsaPUaUYP-wbXG1f-vDBr6bdNRroYQsewg0VhM95eisGBi1r5G1DoD1cWassj9vsTUfL_MFIjTyHYrSp6PUCLlMhyd2FiaDcrEFvdIipXEYRNJZ_ew72g" />
-          <div className="absolute inset-0 bg-slate-950/70"></div>
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <nav className="flex mb-4 text-blue-400 text-sm font-bold uppercase tracking-widest gap-2 items-center">
-            <span>Home</span>
-            <span className="material-symbols-outlined text-xs">chevron_right</span>
-            <span>Portfolio</span>
-          </nav>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
-            Infrastructure <span className="text-blue-400">Portfolio</span>
-          </h1>
-        </div>
-      </section>
 
-      {/* Filter Bar */}
-      <section className="py-8 bg-white border-b border-slate-100 sticky top-20 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="flex flex-wrap items-center gap-2">
-              {categories.map((cat) => (
-                <button 
-                  key={cat}
-                  onClick={() => setFilter(cat)}
-                  className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${
-                    filter === cat ? 'bg-primary text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+      {/* ── 1. HERO ── */}
+      <section className="relative flex items-center min-h-[340px] md:min-h-[420px] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-b-4 border-primary">
+        {/* Blueprint grid */}
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(43,108,176,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(43,108,176,0.4) 1px, transparent 1px)',
+            backgroundSize: '60px 60px',
+          }}
+        />
+        {/* Radial glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_50%,rgba(43,108,176,0.25),transparent_70%)]" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-widest mb-6">
+            <Link to="/" className="hover:text-white transition-colors">Home</Link>
+            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <span className="text-white">Projects</span>
+          </nav>
+
+          <div className="max-w-3xl">
+            <span className="inline-block py-1 px-3 rounded-full bg-primary/20 border border-primary/30 text-blue-300 text-xs font-bold tracking-widest uppercase mb-5">
+              Project Portfolio
+            </span>
+            <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-5">
+              Delivering Infrastructure{' '}
+              <span className="text-blue-400">Excellence</span> Across Texas
+            </h1>
+            <p className="text-lg text-slate-300 leading-relaxed">
+              From transportation planning to drainage design, KAVI Consulting Inc. has successfully
+              completed complex civil engineering projects for cities, counties, and agencies
+              throughout Texas.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Portfolio Grid */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* 4. Slice the list to only show visible items */}
-            {filteredList.slice(0, visibleCount).map((project, idx) => (
-              <div key={idx} className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 h-full">
-                <div className="relative overflow-hidden aspect-[4/3] flex-shrink-0">
-                  <img alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={project.img} />
-                </div>
-                <div className="p-6 flex flex-col flex-grow">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {project.tags.map(tag => (
-                      <span key={tag} className="text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-primary px-2 py-0.5 rounded">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <h3 className="text-xl font-extrabold text-slate-900 mb-2">{project.title}</h3>
-                  <p className="text-sm text-slate-500 mb-4 line-clamp-2 flex-grow">{project.desc}</p>
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-50 mt-auto">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Client: {project.client}</span>
-                  </div>
-                </div>
-              </div>
+      {/* ── 2. FILTER BAR ── */}
+      <section className="sticky top-[72px] z-40 bg-white/95 backdrop-blur-sm border-b border-slate-100 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
+            {FILTER_CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveFilter(cat)}
+                className={`flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 ${filterButtonClass(cat)}`}
+                aria-pressed={activeFilter === cat}
+              >
+                {cat !== 'All Projects' && (
+                  <span className="material-symbols-outlined text-[13px]">
+                    {CATEGORY_STYLES[cat as ProjectCategory]?.icon}
+                  </span>
+                )}
+                {cat}
+                <span className={`ml-0.5 text-[10px] font-black px-1.5 py-0.5 rounded-full ${activeFilter === cat ? 'bg-white/25' : 'bg-slate-100 text-slate-500'}`}>
+                  {countForCategory(cat)}
+                </span>
+              </button>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* 5. Only show button if there are more items to load */}
-          {visibleCount < filteredList.length && (
-            <div className="mt-20 text-center">
-              <button 
-                onClick={handleLoadMore}
-                className="inline-flex items-center gap-2 bg-white text-slate-900 px-8 py-3 rounded-full font-bold border border-slate-200 hover:bg-slate-50 transition-all shadow-sm active:scale-95"
+      {/* ── 3. PROJECTS GRID ── */}
+      <section className="py-16 bg-slate-50" aria-label="Project portfolio">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Result count */}
+          <div className="flex items-center justify-between mb-8">
+            <p className="text-sm text-slate-500 font-medium">
+              Showing{' '}
+              <span className="font-bold text-slate-800">{filteredProjects.length}</span>{' '}
+              {filteredProjects.length === 1 ? 'project' : 'projects'}
+              {activeFilter !== 'All Projects' && (
+                <span> in <span className="text-primary font-bold">{activeFilter}</span></span>
+              )}
+            </p>
+            {activeFilter !== 'All Projects' && (
+              <button
+                onClick={() => setActiveFilter('All Projects')}
+                className="text-xs font-bold text-slate-400 hover:text-primary transition-colors flex items-center gap-1"
               >
-                Load More Projects
-                <span className="material-symbols-outlined">expand_more</span>
+                <span className="material-symbols-outlined text-[14px]">close</span>
+                Clear filter
               </button>
+            )}
+          </div>
+
+          {filteredProjects.length === 0 ? (
+            <div className="text-center py-24 text-slate-400">
+              <span className="material-symbols-outlined text-5xl mb-4 block">search_off</span>
+              <p className="font-semibold text-lg">No projects match this filter.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProjects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  onViewDetails={setSelectedProject}
+                />
+              ))}
             </div>
           )}
         </div>
       </section>
 
-      {/* Partners Marquee */}
-      <section className="py-20 bg-white border-t border-slate-100 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
-          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400 mb-4">Trusted By Industry Leaders</h2>
-        </div>
-        <div className="relative overflow-hidden whitespace-nowrap">
-          <div className="flex items-center gap-24 animate-marquee grayscale opacity-50">
-            {['HARRIS COUNTY', 'METRO', 'FEMA', 'CITY OF HOUSTON', 'TxDOT', 'Uptown TIRZ'].map((p, i) => (
-              <span key={i} className="text-2xl font-black text-slate-900 whitespace-nowrap">{p}</span>
-            ))}
-            {['HARRIS COUNTY', 'METRO', 'FEMA', 'CITY OF HOUSTON', 'TxDOT', 'Uptown TIRZ'].map((p, i) => (
-              <span key={`dup-${i}`} className="text-2xl font-black text-slate-900 whitespace-nowrap">{p}</span>
+      {/* ── 4. STATS BAR ── */}
+      <section className="bg-slate-900 py-14" aria-label="Project statistics">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section label */}
+          <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-blue-400 mb-10">
+            Our Impact By The Numbers
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {STATS.map((s, i) => (
+              <div
+                key={i}
+                className="flex flex-col items-center text-center p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              >
+                <span className="material-symbols-outlined text-blue-400 text-2xl mb-2">{s.icon}</span>
+                <span className="text-xl font-extrabold text-white leading-tight mb-1">{s.value}</span>
+                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider leading-snug">
+                  {s.label}
+                </span>
+              </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* ── 5. CTA SECTION ── */}
+      <section className="py-20 bg-primary relative overflow-hidden" aria-label="Call to action">
+        {/* Subtle pattern */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="inline-block py-1 px-3 rounded-full bg-white/15 border border-white/25 text-blue-100 text-xs font-bold tracking-widest uppercase mb-6">
+            Work With Us
+          </span>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight mb-6">
+            Ready to Bring Your Project to Life?
+          </h2>
+          <p className="text-lg text-blue-100 leading-relaxed mb-10 max-w-2xl mx-auto">
+            With over 80 years of combined experience and a proven track record of successful project
+            delivery, KAVI Consulting Inc. is ready to turn your vision into reality — from concept
+            to completion.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              to="/contact"
+              className="inline-flex items-center gap-2 bg-white text-primary font-extrabold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 text-sm"
+            >
+              <span className="material-symbols-outlined text-[18px]">mail</span>
+              Contact Us Today
+            </Link>
+            <Link
+              to="/services"
+              className="inline-flex items-center gap-2 bg-transparent text-white font-bold px-8 py-3.5 rounded-full border-2 border-white/50 hover:border-white hover:bg-white/10 transition-all duration-200 text-sm"
+            >
+              <span className="material-symbols-outlined text-[18px]">engineering</span>
+              Learn About Our Services
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── MODAL ── */}
+      {selectedProject && (
+        <ProjectModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </div>
   );
 };
