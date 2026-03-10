@@ -596,7 +596,7 @@ const About: React.FC = () => {
                 <div className="lg:absolute lg:inset-0 bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden flex flex-col h-full lg:h-auto max-h-[500px] lg:max-h-none">
                   <div className="bg-slate-50 px-8 py-5 border-b border-slate-100 flex items-center gap-3">
                     <span className="material-symbols-outlined text-primary">list_alt</span>
-                    <h3 className="text-xl font-bold text-slate-900">Categories of Work</h3>
+                    <h3 className="text-xl font-bold text-slate-900">TxDOT Pre Certifications</h3>
                   </div>
 
                   <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
