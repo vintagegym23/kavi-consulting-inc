@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { categoriesOfWork } from '../src/data/categoriesOfWork';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -83,7 +84,6 @@ const About: React.FC = () => {
     setExpandedExpertise(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
 
-  const [certModal, setCertModal] = useState<any>(null);
   const [activeSection, setActiveSection] = useState<string>('overview');
 
   const isScrollingRef = useRef<boolean>(false);
@@ -217,26 +217,6 @@ const About: React.FC = () => {
     }
   ];
 
-  const certifications = [
-    {
-      id: 'MBE', name: 'Minority Business Enterprise', code: 'MBE-2024-101', expiry: 'December 2025', auth: 'National Council', desc: 'Officially certified MBE, recognizing our diverse ownership and allowing us to fulfill municipal diversity quotas.', benefits: ['Eligible for government diversity contracts', 'Committed to inclusion', 'Annual compliance audits']
-    },
-    {
-      id: 'DBE', name: 'Disadvantaged Business Enterprise', code: 'DBE-2024-304', expiry: 'January 2026', auth: 'Department of Transportation', desc: 'Federally recognized DBE aimed at providing a level playing field for highly-capable diverse firms in transportation contracting.', benefits: ['Federal project eligibility', 'State DOT preference', 'Transportation funding programs']
-    },
-    {
-      id: 'HUB', name: 'Historically Underutilized Business', code: 'HUB-2024-508', expiry: 'July 2025', auth: 'State Government', desc: 'Certified HUB enabling us to foster strong economic relationships with state sectors and enhance diverse contracting.', benefits: ['State vendor preference', 'Economic development alignment', 'Strategic public partnerships']
-    },
-    {
-      id: 'ISO', name: 'ISO 9001:2015', code: 'ISO-9001-2023', expiry: 'March 2026', auth: 'International Organization for Standardization', desc: 'Certified for our Quality Management Systems, ensuring consistent delivery of excellent engineering services.', benefits: ['Global quality standard', 'Rigorous internal audits', 'Continuous improvement workflow']
-    },
-    {
-      id: 'OSHA', name: 'OSHA Safety Certification', code: 'OSH-411-998', expiry: 'Ongoing', auth: 'Occupational Safety and Health Administration', desc: 'Recognized for excellent workplace and site safety standards across all physical civil deployments.', benefits: ['Zero-incident commitment', 'Regular site inspections', 'Dedicated safety officers']
-    },
-    {
-      id: 'LEED', name: 'LEED Accredited', code: 'LED-PRO-123', expiry: 'November 2025', auth: 'U.S. Green Building Council', desc: 'Accredited professional status for implementing highly sustainable, energy-efficient building strategies.', benefits: ['Eco-friendly design capability', 'Energy conservation planning', 'Green building compliance']
-    }
-  ];
 
 
 
@@ -282,52 +262,6 @@ const About: React.FC = () => {
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* ── Cert Grid Specific ── */
-        .cert-card {
-          background: #fff;
-          border-radius: 24px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 2.5rem 1.5rem;
-          text-align: center;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-          border: 1px solid rgba(0,0,0,0.01);
-        }
-        .cert-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        .cert-card-blue {
-          background: #2b6cb0;
-          color: #fff;
-          border: none;
-        }
-        .cert-card h3 {
-          font-size: 2.25rem;
-          font-weight: 800;
-          color: #2b6cb0;
-          margin-bottom: 0.75rem;
-          letter-spacing: -0.02em;
-        }
-        .cert-card p {
-          font-size: 0.75rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-          color: #718096;
-          max-width: 160px;
-          line-height: 1.5;
-        }
-        .cert-card-blue h3, .cert-card-blue p {
-          color: #fff;
-        }
-        .cert-card-blue .material-symbols-outlined {
-          font-size: 3.5rem;
-          margin-bottom: 1.5rem;
-        }
       `}} />
 
       <div className="bg-slate-50 min-h-screen font-sans [overflow-x:clip]">
@@ -612,161 +546,80 @@ const About: React.FC = () => {
           </div>
         </section>
 
-        {/* 3.1 Certifications Section Improvements */}
-        <section id="certifications" className="py-16 md:py-24 bg-[#f8faff] scroll-mt-36" aria-label="Official Certifications">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Certifications & Categories of Work */}
+        <section id="certifications" className="py-16 md:py-24 bg-[#f8faff] scroll-mt-36" aria-label="Certifications and Categories of Work">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <div className="text-center mb-12" data-aos="fade-up">
+            <div className="text-center mb-10 md:mb-16" data-aos="fade-up">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <span className="text-primary font-bold tracking-widest text-xs uppercase">Credentials</span>
+                <span className="text-primary font-bold tracking-widest text-xs uppercase">Credentials & Work Scope</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900">Certifications</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900">Certifications & Categories of Work</h2>
+              <div className="w-16 h-1 bg-primary mx-auto mt-6"></div>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 items-stretch">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
 
-              {/* LEFT SIDE: 2x2 Grid */}
-              <div className="w-full lg:w-1/2" data-aos="fade-right">
-                <div className="bg-[#eef2f8] p-6 rounded-[2rem] border border-[#dde6f0] grid grid-cols-2 gap-4 h-full">
+              {/* LEFT — Business Certifications (MBE / DBE / HUB) */}
+              <div className="flex-1 space-y-8" data-aos="fade-right">
+                <div className="bg-[#f8faff] p-6 sm:p-10 rounded-[2.5rem] border border-[#edf2f7] shadow-sm grid grid-cols-2 gap-4 sm:gap-6 relative overflow-hidden w-full max-w-2xl h-full min-h-[300px] flex-1">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
 
-                  {/* MBE Card */}
-                  <div
-                    className="bg-white rounded-[18px] flex flex-col items-center justify-center py-10 px-4 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300 cursor-pointer"
-                    onClick={() => setCertModal(certifications[0])}
-                  >
-                    <h3 className="text-[2rem] font-extrabold text-[#2b6cb0] mb-2 tracking-tight">MBE</h3>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#718096] leading-tight">Minority Business<br />Enterprise</p>
+                  {/* MBE */}
+                  <div className="bg-white rounded-[24px] flex flex-col items-center justify-center py-8 px-4 sm:py-10 sm:px-6 text-center shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 border border-black/5 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+                    <h3 className="text-3xl sm:text-[2.25rem] font-extrabold text-[#2b6cb0] mb-2 sm:mb-3 tracking-tight leading-none">MBE</h3>
+                    <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] text-[#718096] max-w-[160px] leading-relaxed">Minority Business Enterprise</p>
                   </div>
 
-                  {/* DBE Card */}
-                  <div
-                    className="bg-white rounded-[18px] flex flex-col items-center justify-center py-10 px-4 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300 cursor-pointer"
-                    onClick={() => setCertModal(certifications[1])}
-                  >
-                    <h3 className="text-[2rem] font-extrabold text-[#2b6cb0] mb-2 tracking-tight">DBE</h3>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#718096] leading-tight">Disadvantaged<br />Business Enterprise</p>
+                  {/* DBE */}
+                  <div className="bg-white rounded-[24px] flex flex-col items-center justify-center py-8 px-4 sm:py-10 sm:px-6 text-center shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 border border-black/5 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+                    <h3 className="text-3xl sm:text-[2.25rem] font-extrabold text-[#2b6cb0] mb-2 sm:mb-3 tracking-tight leading-none">DBE</h3>
+                    <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] text-[#718096] max-w-[160px] leading-relaxed">Disadvantaged Business Enterprise</p>
                   </div>
 
-                  {/* HUB Card */}
-                  <div
-                    className="bg-white rounded-[18px] flex flex-col items-center justify-center py-10 px-4 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300 cursor-pointer"
-                    onClick={() => setCertModal(certifications[2])}
-                  >
-                    <h3 className="text-[2rem] font-extrabold text-[#2b6cb0] mb-2 tracking-tight">HUB</h3>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#718096] leading-tight">Historically<br />Underutilized<br />Business</p>
+                  {/* HUB */}
+                  <div className="bg-white rounded-[24px] flex flex-col items-center justify-center py-8 px-4 sm:py-10 sm:px-6 text-center shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 border border-black/5 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+                    <h3 className="text-3xl sm:text-[2.25rem] font-extrabold text-[#2b6cb0] mb-2 sm:mb-3 tracking-tight leading-none">HUB</h3>
+                    <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] text-[#718096] max-w-[160px] leading-relaxed">Historically Underutilized Business</p>
                   </div>
 
-                  {/* Certified Performance Card — Blue */}
-                  <div className="bg-[#2b6cb0] rounded-[18px] flex flex-col items-center justify-center py-10 px-4 text-center">
-                    <span className="material-symbols-outlined text-white text-[3rem] mb-4" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300" }}>verified</span>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-white leading-tight">Certified Performance</p>
+                  {/* Accent card */}
+                  <div className="bg-[#2b6cb0] text-white rounded-[24px] flex flex-col items-center justify-center py-8 px-4 sm:py-10 sm:px-6 text-center shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 border border-transparent hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+                    <span className="material-symbols-outlined text-[3rem] sm:text-[3.5rem] mb-4 sm:mb-6" style={{ fontVariationSettings: "'FILL' 0, 'wght' 400" }}>verified</span>
+                    <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] text-white leading-relaxed">Certified Performance</p>
                   </div>
-
                 </div>
               </div>
 
-              {/* RIGHT SIDE: All Certifications List Card */}
-              <div className="w-full lg:w-1/2" data-aos="fade-left">
-                <div className="bg-white rounded-[24px] border border-slate-200 shadow-sm flex flex-col h-full min-h-[440px] overflow-hidden">
-
-                  {/* Header */}
-                  <div className="px-7 py-5 border-b border-[#f1f5f9] flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#eff6ff] border border-[#dbeafe] flex items-center justify-center text-blue-600">
-                      <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 0, 'wght' 500" }}>verified</span>
-                    </div>
-                    <h3 className="text-[#0f172a] text-[17px] font-bold">All Certifications</h3>
+              {/* RIGHT — Categories of Work (scrollable compact list) */}
+              <div className="flex-1 lg:max-w-[450px] relative mt-8 lg:mt-0 min-h-[400px] lg:min-h-[500px]" data-aos="fade-left">
+                <div className="lg:absolute lg:inset-0 bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden flex flex-col h-full lg:h-auto max-h-[500px] lg:max-h-none">
+                  <div className="bg-slate-50 px-8 py-5 border-b border-slate-100 flex items-center gap-3">
+                    <span className="material-symbols-outlined text-primary">list_alt</span>
+                    <h3 className="text-xl font-bold text-slate-900">Categories of Work</h3>
                   </div>
 
-                  {/* Scrollable rows */}
-                  <div className="flex-1 overflow-y-auto divide-y divide-[#f1f5f9]">
-                    {certifications.map((cert, idx) => (
-                      <div
-                        key={idx}
-                        onClick={() => setCertModal(cert)}
-                        className="flex items-center gap-4 px-7 py-4 hover:bg-slate-50 cursor-pointer transition-colors"
-                      >
-                        <div className="w-8 h-8 rounded-full bg-[#f0f4f8] flex items-center justify-center flex-shrink-0">
-                          <span className="material-symbols-outlined text-[#2b6cb0] text-[16px]" style={{ fontVariationSettings: "'wght' 500" }}>check</span>
-                        </div>
-                        <div>
-                          <h4 className="text-[#0f172a] font-semibold text-[14px]">{cert.name}</h4>
-                          <p className="text-[#94a3b8] text-[12px] mt-0.5">Issued by Regulating Authority</p>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                    <ul className="space-y-1.5">
+                      {categoriesOfWork.map((item) => (
+                        <li
+                          key={item.code}
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100"
+                        >
+                          <span className="flex-shrink-0 font-mono text-[11px] font-bold text-primary bg-blue-50 px-2 py-1 rounded-md min-w-[52px] text-center">
+                            {item.code}
+                          </span>
+                          <span className="text-sm text-slate-700 leading-snug">{item.description}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-
                 </div>
               </div>
 
             </div>
           </div>
         </section>
-
-        {/* Modal for Certificate Verification */}
-        {certModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm shadow-2xl animate-[fadeIn_0.2s_ease-out]">
-            <div
-              className="bg-white rounded-2xl w-full max-w-2xl overflow-hidden flex flex-col md:flex-row relative"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="modal-title"
-            >
-              <button
-                onClick={() => setCertModal(null)}
-                className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-white/50 hover:bg-slate-100 rounded-full text-slate-600 transition-colors"
-                aria-label="Close modal"
-              >
-                <span className="material-symbols-outlined">close</span>
-              </button>
-
-              <div className="w-full md:w-2/5 bg-slate-100 flex items-center justify-center p-6 md:p-12 border-r border-slate-200">
-                <div className="w-full aspect-[3/4] bg-white border-2 border-slate-200 shadow-md flex items-center justify-center relative inner-shadow-lg">
-                  <div className="text-primary font-black text-4xl opacity-20 transform -rotate-45">{certModal.id} Verify</div>
-                  <div className="absolute bottom-4 right-4 w-12 h-12 border-4 border-yellow-500 rounded-full opacity-50 flex items-center justify-center"><div className="w-8 h-8 rounded-full border border-yellow-500"></div></div>
-                </div>
-              </div>
-
-              <div className="w-full md:w-3/5 p-5 sm:p-8 flex flex-col justify-center bg-white">
-                <div className="flex items-center gap-2 text-green-600 bg-green-50 px-3 py-1 rounded-full w-max text-xs font-bold mb-4 border border-green-200">
-                  <span className="material-symbols-outlined text-sm">verified</span> Verified Active
-                </div>
-                <h3 id="modal-title" className="text-2xl font-black text-slate-900 mb-6">{certModal.name}</h3>
-
-                <div className="space-y-4 mb-8">
-                  <div className="flex border-b border-slate-100 pb-3">
-                    <strong className="w-1/3 text-sm text-slate-500">Issued By:</strong>
-                    <span className="w-2/3 text-sm text-slate-800 font-medium">{certModal.auth}</span>
-                  </div>
-                  <div className="flex border-b border-slate-100 pb-3">
-                    <strong className="w-1/3 text-sm text-slate-500">Cert ID:</strong>
-                    <span className="w-2/3 text-sm text-slate-800 font-mono">{certModal.code}</span>
-                  </div>
-                  <div className="flex pb-3">
-                    <strong className="w-1/3 text-sm text-slate-500">Valid Until:</strong>
-                    <span className="w-2/3 text-sm text-slate-800 font-medium">{certModal.expiry}</span>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900 mb-3">Certification Benefits</h4>
-                  <ul className="space-y-2">
-                    {certModal.benefits.map((ben: string, i: number) => (
-                      <li key={i} className="flex gap-2 text-sm text-slate-600">
-                        <span className="material-symbols-outlined text-primary text-[18px]">check_circle</span>
-                        {ben}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <a href="#" className="mt-8 text-primary font-bold text-sm hover:underline flex items-center gap-1 w-max">
-                  Verify on Official Website <span className="material-symbols-outlined text-sm">open_in_new</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Partners Marquee */}
         <section id="content-end-marker" className="py-16 md:py-32 bg-white border-t border-slate-100 overflow-hidden scroll-mt-36">
