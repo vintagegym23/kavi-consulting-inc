@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import emailjs from '@emailjs/browser';
 import logo from '../images/kavilogo.png';
-
-type NotificationType = 'success' | 'error' | null;
 
 /* ── Inline SVG social icons (no external icon lib needed) ── */
 const LinkedInIcon = () => (
@@ -12,82 +9,13 @@ const LinkedInIcon = () => (
   </svg>
 );
 
-
-
 const Footer: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [isSending, setIsSending] = useState(false);
-  const [notification, setNotification] = useState<NotificationType>(null);
-  const [subscribed, setSubscribed] = useState(false);
-
-  useEffect(() => {
-    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY');
-  }, []);
-
-  useEffect(() => {
-    if (notification) {
-      const t = setTimeout(() => setNotification(null), 5000);
-      return () => clearTimeout(t);
-    }
-  }, [notification]);
-
-  const handleConnect = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || isSending) return;
-    setIsSending(true);
-
-    emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID',
-      import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID',
-      {
-        user_email: email,
-        message: 'Newsletter subscription request from footer.',
-        to_email: import.meta.env.VITE_RECIPIENT_EMAIL || 'dineshb07143@gmail.com',
-      },
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY'
-    )
-      .then(() => { setNotification('success'); setSubscribed(true); setEmail(''); })
-      .finally(() => setIsSending(false));
-  };
-
-  const navLinks = [
-    { label: 'Home', to: '/' },
-    { label: 'About Us', to: '/about' },
-    { label: 'Services', to: '/services' },
-    { label: 'Projects', to: '/projects' },
-    { label: 'Contact', to: '/contact' },
-  ];
-
-  const serviceLinks = [
-    { label: 'Feasibility Studies', to: '/services#feasibility-studies' },
-    { label: 'Transport Engineering', to: '/services#transport-engineering' },
-    { label: 'Drainage Design', to: '/services#drainage-design' },
-    { label: 'Utility Design', to: '/services#utility-design' },
-    { label: 'Construction', to: '/services#construction' },
-    { label: 'District Engineering', to: '/services#district-engineering' },
-    { label: 'Site Development', to: '/services#site-development' },
-    { label: 'Program Management', to: '/services#program-management' },
-  ];
-
   const socialLinks = [
     { icon: <LinkedInIcon />, href: 'https://linkedin.com/company/kavi-consulting', label: 'LinkedIn' },
   ];
 
   return (
     <footer className="bg-[#0d1b2e] text-white relative overflow-hidden">
-
-      {/* Toast */}
-      {notification && (
-        <div className={`fixed top-4 right-4 z-[200] px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 text-white ${notification === 'success' ? 'bg-green-600' : 'bg-red-600'}`}>
-          <span className="material-symbols-outlined">{notification === 'success' ? 'check_circle' : 'error'}</span>
-          <p className="font-semibold text-sm">
-            {notification === 'success' ? "You're subscribed! We'll keep you updated." : 'Failed to subscribe. Please try again.'}
-          </p>
-          <button onClick={() => setNotification(null)} aria-label="Dismiss" className="ml-2 hover:opacity-70">
-            <span className="material-symbols-outlined text-sm">close</span>
-          </button>
-        </div>
-      )}
 
       {/* Subtle blueprint grid overlay */}
       <div
@@ -103,7 +31,7 @@ const Footer: React.FC = () => {
 
       {/* ── Main Footer Grid ── */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 justify-items-start md:justify-items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 justify-items-start md:justify-items-center">
 
           {/* COL 1 — Logo + Tagline + Social */}
           <div className="space-y-6">
@@ -119,12 +47,6 @@ const Footer: React.FC = () => {
             <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
               Full-service civil engineering consultancy delivering precision-built infrastructure from concept to completion across Texas and beyond.
             </p>
-
-            {/* Certification badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-blue-500/20 bg-blue-500/5 text-blue-300 text-xs font-semibold">
-              <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-              MBE Certified · DBE Certified
-            </div>
 
             {/* Social Icons */}
             <div className="flex items-center gap-3">
@@ -143,30 +65,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* COL 2 — Quick Navigation
-          <div>
-            <h4 className="text-white font-bold uppercase text-xs tracking-widest mb-6 flex items-center gap-2">
-              <span className="w-5 h-[2px] bg-blue-500 rounded-full inline-block" />
-              Navigation
-            </h4>
-            <ul className="space-y-3">
-              {navLinks.map(({ label, to }) => (
-                <li key={label}>
-                  <Link
-                    to={to}
-                    className="text-slate-400 text-sm hover:text-blue-300 transition-colors flex items-center gap-1.5 group"
-                  >
-                    <span className="material-symbols-outlined text-xs text-blue-500/40 group-hover:text-blue-400 transition-colors" style={{ fontSize: 12 }}>
-                      chevron_right
-                    </span>
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div> */}
-
-          {/* COL 3 — Contact Info */}
+          {/* COL 2 — Contact Info */}
           <div>
             <h4 className="text-white font-bold uppercase text-xs tracking-widest mb-6 flex items-center gap-2">
               <span className="w-5 h-[2px] bg-blue-500 rounded-full inline-block" />
@@ -176,18 +75,18 @@ const Footer: React.FC = () => {
               {[
                 {
                   icon: 'location_on',
-                  lines: ['1200 Smith Street, Suite 1600', 'Houston, Texas 77002'],
-                  href: 'https://maps.google.com/?q=1200+Smith+Street+Houston+TX',
+                  lines: ['1011 Highway 6S #307 Houston TX 77077'],
+                  href: 'https://maps.google.com/?q=1011+Highway+6S+%23307+Houston+TX+77077',
                 },
                 {
                   icon: 'call',
-                  lines: ['+1 (713) 555-0198'],
-                  href: 'tel:+17135550198',
+                  lines: ['+1 281-809-3043'],
+                  href: 'tel:+1 281-809-3043',
                 },
                 {
                   icon: 'mail',
-                  lines: ['contact@kaviconsulting.com'],
-                  href: 'mailto:contact@kaviconsulting.com',
+                  lines: ['info@kaviconsulting.com'],
+                  href: 'mailto:info@kaviconsulting.com',
                 },
               ].map(({ icon, lines, href }, i) => (
                 <li key={i} className="flex items-start gap-3">
@@ -217,77 +116,6 @@ const Footer: React.FC = () => {
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* COL 4 — Newsletter */}
-          <div>
-            <h4 className="text-white font-bold uppercase text-xs tracking-widest mb-6 flex items-center gap-2">
-              <span className="w-5 h-[2px] bg-blue-500 rounded-full inline-block" />
-              Stay Updated
-            </h4>
-
-            <p className="text-slate-400 text-sm leading-relaxed mb-5">
-              Get the latest infrastructure insights, project highlights, and industry news straight to your inbox.
-            </p>
-
-            {subscribed ? (
-              <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-3 rounded-xl text-sm font-semibold">
-                <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                You're subscribed!
-              </div>
-            ) : (
-              <form onSubmit={handleConnect} className="space-y-3">
-                <label htmlFor="footer-email" className="sr-only">Email address for updates</label>
-                <div className="relative">
-                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" style={{ fontSize: 17 }}>
-                    mail
-                  </span>
-                  <input
-                    id="footer-email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder="Enter your email for updates"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={isSending}
-                  className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-sm font-bold py-3 rounded-xl transition-colors focus:outline-none focus:ring-4 focus:ring-blue-500/30"
-                >
-                  {isSending ? (
-                    <>
-                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Subscribing...
-                    </>
-                  ) : (
-                    <>
-                      <span className="material-symbols-outlined text-base">send</span>
-                      Subscribe
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
-
-            {/* Services quick links below subscribe
-            <div className="mt-8">
-              <p className="text-slate-500 text-xs uppercase tracking-widest font-bold mb-3">Our Services</p>
-              <ul className="space-y-2">
-                {serviceLinks.map(({ label, to }) => (
-                  <li key={label}>
-                    <Link
-                      to={to}
-                      className="text-slate-500 text-xs hover:text-blue-300 transition-colors leading-relaxed"
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div> */}
           </div>
 
         </div>

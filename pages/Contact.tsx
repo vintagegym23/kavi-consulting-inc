@@ -63,19 +63,19 @@ const Contact: React.FC = () => {
   const contactItems = [
     {
       icon: 'location_on', title: 'Houston Office',
-      lines: ['1200 Smith Street, Suite 1600', 'Houston, Texas 77002'],
-      href: 'https://maps.google.com/?q=1200+Smith+Street+Suite+1600+Houston+TX+77002',
+      lines: ['1011 Highway 6S #307', 'Houston, Texas 77077'],
+      href: 'https://maps.google.com/?q=1011+Highway+6S+%23307+Houston+TX+77077',
       action: 'Get Directions', color: '#2563eb',
     },
     {
       icon: 'call', title: 'Phone',
-      lines: ['+1 (713) 555-0198'],
-      href: 'tel:+17135550198', action: 'Call Now', color: '#059669',
+      lines: ['+1 (281) 809-3043'],
+      href: 'tel:+12818093043', action: 'Call Now', color: '#059669',
     },
     {
       icon: 'mail', title: 'Email',
-      lines: ['contact@kaviconsulting.com'],
-      href: 'mailto:contact@kaviconsulting.com', action: 'Send Email', color: '#7c3aed',
+      lines: ['info@kaviconsulting.com'],
+      href: 'mailto:info@kaviconsulting.com', action: 'Send Email', color: '#7c3aed',
     },
   ];
 
@@ -108,10 +108,6 @@ const Contact: React.FC = () => {
         }} />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-blue-300 text-xs font-bold tracking-widest uppercase mb-6">
-            <span className="material-symbols-outlined text-sm">forum</span>
-            Let's Talk
-          </div>
           <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6">
             Get in{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Touch</span>
@@ -131,9 +127,6 @@ const Contact: React.FC = () => {
             <div className="space-y-8">
               <div>
                 <h2 className="text-3xl font-extrabold text-slate-900 mb-3">Office Information</h2>
-                <p className="text-slate-500 leading-relaxed text-sm">
-                  Visit our headquarters or reach out via phone or email. Our technical team is available Monday–Friday, 8 AM–6 PM CT.
-                </p>
               </div>
 
               {/* Info Cards */}
@@ -177,8 +170,7 @@ const Contact: React.FC = () => {
               <div className="flex flex-wrap gap-3 pt-2">
                 {[
                   { icon: 'work', label: 'LinkedIn', href: 'https://linkedin.com/company/kavi-consulting' },
-                  { icon: 'description', label: 'Download Brochure', href: '#' },
-                  { icon: 'map', label: 'Get Directions', href: 'https://maps.google.com/?q=1200+Smith+Street+Suite+1600+Houston+TX+77002' },
+                  { icon: 'map', label: 'Get Directions', href: 'https://maps.google.com/?q=1011+Highway+6S+%23307+Houston+TX+77077' },
                 ].map((link, i) => (
                   <a
                     key={i}
@@ -203,7 +195,6 @@ const Contact: React.FC = () => {
                   <div className="absolute -left-4 -bottom-8 w-24 h-24 rounded-full bg-blue-500/5" />
                   <div className="relative z-10">
                     <h3 className="text-2xl font-extrabold text-white mb-1">Send Us a Message</h3>
-                    <p className="text-slate-400 text-sm">We typically respond within 24 business hours.</p>
                   </div>
                 </div>
 
@@ -269,10 +260,10 @@ const Contact: React.FC = () => {
                 >
                   location_on
                 </span>
-                <span className="text-sm font-bold text-slate-700 truncate">1200 Smith St, Suite 1600 · Houston, TX</span>
+                <span className="text-sm font-bold text-slate-700 truncate">1011 Highway 6S #307 · Houston, TX</span>
               </div>
               <a
-                href="https://maps.google.com/?q=1200+Smith+Street+Suite+1600+Houston+TX+77002"
+                href="https://maps.google.com/?q=1011+Highway+6S+%23307+Houston+TX+77077"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-shrink-0 flex items-center gap-2 bg-primary hover:bg-blue-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl shadow-md transition-colors"
@@ -282,10 +273,10 @@ const Contact: React.FC = () => {
               </a>
             </div>
 
-            {/* Actual Google Maps embed — 1200 Smith St, Houston TX 77002 */}
+            {/* Actual Google Maps embed — 1011 Highway 6S #307, Houston TX 77077 */}
             <iframe
               title="KAVI Consulting Inc — Houston Office"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3464.356!2d-95.3715!3d29.7520!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640bf2aa54e1f4d%3A0xa84cbdf8b33a9461!2s1200%20Smith%20St%2C%20Houston%2C%20TX%2077002!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3464.5!2d-95.6413!3d29.7388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c3e1a7b5c8e7%3A0x1!2s1011%20Highway%206S%20%23307%2C%20Houston%2C%20TX%2077077!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
               width="100%"
               height="100%"
               style={{ border: 0, display: 'block' }}

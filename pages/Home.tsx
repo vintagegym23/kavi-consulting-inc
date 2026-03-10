@@ -1,13 +1,8 @@
 import { Link } from 'react-router-dom';
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React from 'react';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import engineering from '../images/engineering.png';
-
-// 1. IMPORT YOUR NEW COMPONENT
 import Hero from '../components/Hero';
 
-// 2. YOUR IMAGE IMPORTS
 import hero1 from '../images/home1.jpeg';
 import hero2 from '../images/home2.jpeg';
 import hero3 from '../images/home3.jpeg';
@@ -15,62 +10,9 @@ import hero4 from '../images/home4.jpeg';
 import hero5 from '../images/home5.jpeg';
 import logo from '../images/logo.png';
 
-import urban from '../images/urban interchage.jpg';
-import grandparking from '../images/grand parking way.jpg';
-import postoak from '../images/post oak boulevard.jpg';
-import metropolitan from '../images/metropoliten.png';
-import River from '../images/river crossing.png';
-
-// import logo from '../images/kavilogo.png';
-
 const heroSlides = [hero1, hero2, hero3, hero4, hero5];
 
-
-const Counter = ({ end, suffix = '' }: { end: number; suffix?: string }) => {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement | null>(null);
-  const started = useRef(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-
-          let start = 0;
-          const duration = 1600;
-          const stepTime = 20;
-          const increment = end / (duration / stepTime);
-
-          const timer = setInterval(() => {
-            start += increment;
-            if (start >= end) {
-              setCount(end);
-              clearInterval(timer);
-            } else {
-              setCount(Math.floor(start));
-            }
-          }, stepTime);
-        }
-      },
-      { threshold: 0.4 }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [end]);
-
-  return (
-    <div ref={ref} className="text-4xl font-extrabold text-slate-900 mb-2">
-      {count}
-      {suffix}
-    </div>
-  );
-};
-
 const Home: React.FC = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
 
 
 
@@ -191,139 +133,6 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Contact Us Section */}
-      <section className="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
-        {/* Background Accents */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl -ml-20 -mb-20"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col md:flex-row">
-
-            {/* Contact Info Sidebar */}
-            <div className="md:w-1/3 bg-primary text-white p-6 sm:p-10 flex flex-col justify-between">
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">Contact Us</h2>
-                <p className="text-blue-100 mb-8 text-sm leading-relaxed">
-                  Ready to start your next project? Reach out to our engineering technical staff today.
-                </p>
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <span className="material-symbols-outlined text-blue-300">location_on</span>
-                    <div>
-                      <p className="font-semibold text-sm">Headquarters</p>
-                      <p className="text-blue-100 text-sm mt-1">123 Engineering Blvd<br />Suite 400<br />Houston, TX 77001</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <span className="material-symbols-outlined text-blue-300">mail</span>
-                    <div>
-                      <p className="font-semibold text-sm">Email</p>
-                      <p className="text-blue-100 text-sm mt-1">info@kaviconsulting.com</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <span className="material-symbols-outlined text-blue-300">call</span>
-                    <div>
-                      <p className="font-semibold text-sm">Phone</p>
-                      <p className="text-blue-100 text-sm mt-1">(555) 123-4567</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Form Area */}
-            <div className="md:w-2/3 p-6 sm:p-10">
-              <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert('Thank you! Your inquiry has been sent.'); }}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-semibold text-slate-700">Full Name</label>
-                    <input
-                      type="text"
-                      id="name"
-                      required
-                      className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
-                      placeholder="John Doe"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="phone" className="text-sm font-semibold text-slate-700">Phone Number</label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      required
-                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                      className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
-                      placeholder="123-456-7890"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-semibold text-slate-700">Email Address</label>
-                  <input
-                    type="email"
-                    id="email"
-                    required
-                    className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
-                    placeholder="john@example.com"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="address" className="text-sm font-semibold text-slate-700">Address</label>
-                  <input
-                    type="text"
-                    id="address"
-                    required
-                    className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
-                    placeholder="Provide your location or project address"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-semibold text-slate-700">Message</label>
-                  <textarea
-                    id="message"
-                    required
-                    rows={4}
-                    className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm resize-none"
-                    placeholder="How can we help you?"
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                >
-                  Send Inquiry
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <style>
-          {`
-            .custom-scrollbar::-webkit-scrollbar {
-              width: 6px;
-            }
-            .custom-scrollbar::-webkit-scrollbar-track {
-              background: #f1f5f9;
-              border-radius: 8px;
-            }
-            .custom-scrollbar::-webkit-scrollbar-thumb {
-              background: #cbd5e1;
-              border-radius: 8px;
-            }
-            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-              background: #94a3b8;
-            }
-          `}
-        </style>
       </section>
 
     </div>

@@ -3,7 +3,7 @@ export type ProjectCategory =
   | 'Drainage & Stormwater'
   | 'Hydraulic Engineering'
   | 'Infrastructure Assessment'
-  | 'Capital Improvement';
+  | 'Feasibility Studies';
 
 export const FILTER_CATEGORIES: string[] = [
   'All Projects',
@@ -11,7 +11,7 @@ export const FILTER_CATEGORIES: string[] = [
   'Drainage & Stormwater',
   'Hydraulic Engineering',
   'Infrastructure Assessment',
-  'Capital Improvement',
+  'Feasibility Studies',
 ];
 
 export interface Project {
@@ -123,7 +123,7 @@ export const projects: Project[] = [
     id: 'inwood-forest',
     title: 'Inwood Forest Area Subprojects 1 & 2',
     client: 'City of Houston',
-    categories: ['Transportation & Roadway', 'Capital Improvement'],
+    categories: ['Transportation & Roadway', 'Feasibility Studies'],
     description:
       'Comprehensive reconstruction design for 18 streets totaling 20,500 linear feet of neighborhood infrastructure.',
     deliverables: [
@@ -193,7 +193,7 @@ export const projects: Project[] = [
     id: 'pre-engineering-cip',
     title: 'Pre-Engineering for Paving & Drainage',
     client: 'City of Houston',
-    categories: ['Capital Improvement'],
+    categories: ['Feasibility Studies'],
     description:
       'Developed schematic-level street and drainage solutions for areas targeted for Capital Improvement Program (CIP) inclusion, supporting planning-level decisions.',
     deliverables: [

@@ -1,15 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import emailjs from '@emailjs/browser';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-
-// ─────────────────────────────────────────────
-// Types
-// ─────────────────────────────────────────────
-interface FormData { name: string; phone: string; email: string; message: string; }
-interface FormErrors { name?: string; phone?: string; email?: string; message?: string; }
-type NotificationType = 'success' | 'error' | null;
 
 // ─────────────────────────────────────────────
 // Service Data
@@ -220,8 +212,8 @@ const ServiceSubNav: React.FC<{ activeId: string }> = ({ activeId }) => {
   }, [activeId]);
 
   return (
-    <div data-subnav className="sticky top-[72px] z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
-      <div ref={navRef} className="max-w-7xl mx-auto px-3 sm:px-4 flex gap-1 overflow-x-auto hide-scrollbar py-2">
+    <div data-subnav className="sticky top-[80px] z-40 bg-white/95 backdrop-blur-sm border-b border-slate-100 shadow-sm">
+      <div ref={navRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center gap-1 overflow-x-auto hide-scrollbar py-3">
         {services.map(s => (
           <a
             key={s.id}
@@ -248,8 +240,7 @@ const ServiceSubNav: React.FC<{ activeId: string }> = ({ activeId }) => {
 const ServiceSection: React.FC<{
   service: typeof services[0];
   index: number;
-  onContact: () => void;
-}> = ({ service, index, onContact }) => {
+}> = ({ service, index }) => {
   const isFlipped = service.flip;
 
   return (
@@ -342,17 +333,8 @@ const ServiceSection: React.FC<{
               </ul>
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Button */}
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-              <button
-                onClick={onContact}
-                className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-95 focus:outline-none focus:ring-4 focus:ring-offset-2"
-                style={{ background: service.accent, boxShadow: `0 4px 14px ${service.accent}50` }}
-                aria-label={`Contact us to discuss your ${service.title} project`}
-              >
-                <span className="material-symbols-outlined text-base">handshake</span>
-                Discuss Your Project
-              </button>
               <Link
                 to="/projects"
                 className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold border-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 focus:outline-none focus:ring-4 focus:ring-offset-2"
@@ -373,25 +355,11 @@ const ServiceSection: React.FC<{
 // Main Services Page
 // ─────────────────────────────────────────────
 const Services: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSending, setIsSending] = useState(false);
-  const [notification, setNotification] = useState<NotificationType>(null);
-  const [formData, setFormData] = useState<FormData>({ name: '', phone: '', email: '', message: '' });
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [activeServiceId, setActiveServiceId] = useState(services[0].id);
-
-  const modalRef = useRef<HTMLDivElement>(null);
-  const firstInputRef = useRef<HTMLInputElement>(null);
 
   // ── AOS init ──
   useEffect(() => {
     AOS.init({ duration: 800, easing: 'ease-in-out', once: true, offset: 80 });
-  }, []);
-
-  // ── EmailJS init ──
-  useEffect(() => {
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
-    emailjs.init(publicKey);
   }, []);
 
   // ── Active section tracker via Intersection Observer ──
@@ -410,115 +378,19 @@ const Services: React.FC = () => {
     return () => observers.forEach(o => o.disconnect());
   }, []);
 
-  // ── Notification auto-dismiss ──
-  useEffect(() => {
-    if (notification) {
-      const t = setTimeout(() => setNotification(null), 5000);
-      return () => clearTimeout(t);
-    }
-  }, [notification]);
-
-  // ── Focus trap in modal ──
-  useEffect(() => {
-    if (isModalOpen) {
-      setTimeout(() => firstInputRef.current?.focus(), 100);
-      const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal(); };
-      window.addEventListener('keydown', handleKey);
-      return () => window.removeEventListener('keydown', handleKey);
-    }
-  }, [isModalOpen]);
-
-  useEffect(() => {
-    if (!isModalOpen) return;
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = originalOverflow;
-    };
-  }, [isModalOpen]);
-
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-    setFormData({ name: '', phone: '', email: '', message: '' });
-    setFormErrors({});
-  }, []);
-
-  const validateForm = (): boolean => {
-    const errors: FormErrors = {};
-    if (!formData.name.trim()) errors.name = 'Name is required';
-    if (formData.phone.trim() && !/^[\d\s\-\+\(\)]+$/.test(formData.phone))
-      errors.phone = 'Please enter a valid phone number';
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      errors.email = 'Valid email is required';
-    if (!formData.message.trim()) errors.message = 'Message is required';
-    else if (formData.message.trim().length < 10) errors.message = 'Message should be at least 10 characters';
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (formErrors[name as keyof FormErrors]) setFormErrors(prev => ({ ...prev, [name]: undefined }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    setIsSending(true);
-    const templateParams = {
-      from_name: formData.name,
-      phone: formData.phone || 'Not provided',
-      email: formData.email,
-      message: formData.message,
-      to_email: 'dineshb07143@gmail.com'
-    };
-    try {
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID',
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID',
-        templateParams
-      );
-      setNotification('success');
-      closeModal();
-    } catch (err) {
-      console.error('EmailJS Error:', err);
-      setNotification('error');
-    } finally { setIsSending(false); }
-  };
-
-  // ─────────────────────────────────────────────
-  // Render
-  // ─────────────────────────────────────────────
   return (
     <>
       {/* SEO Structured Data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }} />
 
-      {/* Meta for Services page */}
       <style dangerouslySetInnerHTML={{
         __html: `
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .capability-check { font-variation-settings: 'FILL' 1; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
       `}} />
 
       <div className="bg-white min-h-screen font-sans [overflow-x:clip]">
-
-        {/* ── Toast Notification ── */}
-        {notification && (
-          <div className={`fixed top-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-[200] w-[calc(100%-1.5rem)] sm:w-auto max-w-md sm:max-w-lg px-4 sm:px-6 py-3 sm:py-4 rounded-xl shadow-2xl flex items-start sm:items-center gap-3 ${notification === 'success' ? 'bg-green-600' : 'bg-red-600'} text-white`}>
-            <span className="material-symbols-outlined">{notification === 'success' ? 'check_circle' : 'error'}</span>
-            <p className="font-medium text-sm sm:text-base leading-snug">{notification === 'success' ? 'Message sent! Our team will contact you soon.' : 'Failed to send. Please try again.'}</p>
-            <button onClick={() => setNotification(null)} className="ml-2 shrink-0 hover:opacity-70 transition-opacity" aria-label="Close notification">
-              <span className="material-symbols-outlined text-sm">close</span>
-            </button>
-          </div>
-        )}
 
         {/* ── Skip link (Accessibility) ── */}
         <a href="#feasibility-studies" className="sr-only focus:not-sr-only focus:fixed focus:top-0 focus:left-0 focus:z-[300] focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:rounded-br-lg focus:font-bold">
@@ -530,7 +402,6 @@ const Services: React.FC = () => {
           className="relative min-h-[56vh] sm:min-h-[60vh] flex items-end overflow-hidden bg-slate-950"
           aria-label="Services hero"
         >
-          {/* Background image */}
           <div className="absolute inset-0">
             <img
               src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
@@ -539,14 +410,10 @@ const Services: React.FC = () => {
               className="w-full h-full object-cover opacity-20"
             />
           </div>
-
-          {/* Blueprint grid overlay */}
           <div className="absolute inset-0 opacity-[0.04]" style={{
             backgroundImage: 'linear-gradient(rgba(66,153,225,1) 1px, transparent 1px), linear-gradient(90deg, rgba(66,153,225,1) 1px, transparent 1px)',
             backgroundSize: '60px 60px'
           }} />
-
-          {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent" />
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 sm:pb-20 pt-24 sm:pt-32 w-full">
@@ -563,8 +430,6 @@ const Services: React.FC = () => {
               <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl leading-relaxed mb-8 sm:mb-10">
                 KAVI Consulting delivers <strong className="text-white">full-spectrum engineering services</strong> — from initial feasibility studies to final construction management — tailored to infrastructure development, transportation systems, and site development of any scale.
               </p>
-
-
             </div>
           </div>
         </section>
@@ -579,117 +444,9 @@ const Services: React.FC = () => {
               key={service.id}
               service={service}
               index={index}
-              onContact={() => setIsModalOpen(true)}
             />
           ))}
         </main>
-
-
-
-        {/* ── CONTACT MODAL ── */}
-        {isModalOpen && (
-          <div
-            className="fixed inset-0 z-[150] flex items-start sm:items-center justify-center p-3 sm:p-4 bg-slate-900/70 backdrop-blur-sm overflow-y-auto"
-            onClick={e => e.target === e.currentTarget && closeModal()}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-heading"
-          >
-            <div
-              ref={modalRef}
-              className="bg-white rounded-2xl sm:rounded-3xl w-full max-w-lg shadow-2xl relative overflow-y-auto max-h-[calc(100vh-1.5rem)] sm:max-h-[calc(100vh-2rem)] my-3 sm:my-4"
-            >
-              {/* Modal header */}
-              <div className="bg-gradient-to-r from-primary-dark to-primary p-5 sm:p-8 text-white relative overflow-hidden">
-                <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/5"></div>
-                <button
-                  onClick={closeModal}
-                  className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
-                  aria-label="Close modal"
-                >
-                  <span className="material-symbols-outlined">close</span>
-                </button>
-                <h3 id="modal-heading" className="text-xl sm:text-2xl font-extrabold relative z-10">Talk to an Expert</h3>
-                <p className="text-blue-200 text-sm mt-1 relative z-10">We'll respond within 1 business day.</p>
-              </div>
-
-              {/* Modal form */}
-              <div className="p-5 sm:p-8">
-                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                  <div>
-                    <input
-                      ref={firstInputRef}
-                      required
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 rounded-xl border text-sm ${formErrors.name ? 'border-red-400 bg-red-50' : 'border-slate-200'} outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors`}
-                      placeholder="Full Name *"
-                    />
-                    {formErrors.name && <p className="text-red-500 text-xs mt-1 ml-1">{formErrors.name}</p>}
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <input
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className={`w-full px-4 py-3 rounded-xl border text-sm ${formErrors.phone ? 'border-red-400 bg-red-50' : 'border-slate-200'} outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors`}
-                        placeholder="Phone (optional)"
-                      />
-                      {formErrors.phone && <p className="text-red-500 text-xs mt-1 ml-1">{formErrors.phone}</p>}
-                    </div>
-                    <div>
-                      <input
-                        required
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className={`w-full px-4 py-3 rounded-xl border text-sm ${formErrors.email ? 'border-red-400 bg-red-50' : 'border-slate-200'} outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors`}
-                        placeholder="Email *"
-                      />
-                      {formErrors.email && <p className="text-red-500 text-xs mt-1 ml-1">{formErrors.email}</p>}
-                    </div>
-                  </div>
-
-                  <div>
-                    <textarea
-                      required
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      rows={4}
-                      className={`w-full px-4 py-3 rounded-xl border text-sm ${formErrors.message ? 'border-red-400 bg-red-50' : 'border-slate-200'} outline-none resize-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors`}
-                      placeholder="Tell us about your project... *"
-                    />
-                    {formErrors.message && <p className="text-red-500 text-xs mt-1 ml-1">{formErrors.message}</p>}
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSending}
-                    className="w-full bg-primary text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-primary-dark transition-all disabled:opacity-50 flex items-center justify-center gap-2 focus:outline-none focus:ring-4 focus:ring-primary/30"
-                  >
-                    {isSending ? (
-                      <>
-                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <span className="material-symbols-outlined text-sm">send</span>
-                        Send Message
-                      </>
-                    )}
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        )}
 
       </div>
     </>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { projects, FILTER_CATEGORIES, type Project, type ProjectCategory } from '../src/data/projects';
 
@@ -31,11 +31,11 @@ const CATEGORY_STYLES: Record<
     gradient: 'from-amber-500 to-amber-800',
     icon: 'search_insights',
   },
-  'Capital Improvement': {
+  'Feasibility Studies': {
     badge: 'bg-emerald-100 text-emerald-700',
     activeBg: 'bg-emerald-600 text-white border-emerald-600',
     gradient: 'from-emerald-600 to-emerald-900',
-    icon: 'construction',
+    icon: 'query_stats',
   },
 };
 
@@ -238,20 +238,17 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
   );
 };
 
-// ─── Stats data ───────────────────────────────────────────────────────────────
-const STATS = [
-  { icon: 'folder_open', value: '14+', label: 'Projects Completed' },
-  { icon: 'water_pump', value: '200,000+', label: 'LF Storm Sewer Designed' },
-  { icon: 'water', value: '30+', label: 'Stream Crossings Analyzed' },
-  { icon: 'bridge', value: '200', label: 'Bridges Assessed for Scour' },
-  { icon: 'history_edu', value: '80+', label: 'Years Combined Experience' },
-  { icon: 'verified', value: 'MBE · DBE · HUB', label: 'Certified' },
-];
-
 // ─── Main page ────────────────────────────────────────────────────────────────
 const Projects: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('All Projects');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const filterBarRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll filter bar to keep active button visible
+  useEffect(() => {
+    const activeEl = filterBarRef.current?.querySelector(`[data-filter="${activeFilter}"]`) as HTMLElement | null;
+    activeEl?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+  }, [activeFilter]);
 
   const filteredProjects =
     activeFilter === 'All Projects'
@@ -317,12 +314,12 @@ const Projects: React.FC = () => {
       </section>
 
       {/* ── 2. FILTER BAR ── */}
-      <section className="sticky top-[72px] z-40 bg-white/95 backdrop-blur-sm border-b border-slate-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
+      <section className="sticky top-[80px] z-40 bg-white/95 backdrop-blur-sm border-b border-slate-100 shadow-sm">
+        <div ref={filterBarRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center gap-2 overflow-x-auto py-3" style={{ scrollbarWidth: 'none' }}>
             {FILTER_CATEGORIES.map((cat) => (
               <button
                 key={cat}
+                data-filter={cat}
                 onClick={() => setActiveFilter(cat)}
                 className={`flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 ${filterButtonClass(cat)}`}
                 aria-pressed={activeFilter === cat}
@@ -338,7 +335,6 @@ const Projects: React.FC = () => {
                 </span>
               </button>
             ))}
-          </div>
         </div>
       </section>
 
@@ -385,30 +381,6 @@ const Projects: React.FC = () => {
         </div>
       </section>
 
-      {/* ── 4. STATS BAR ── */}
-      <section className="bg-slate-900 py-14" aria-label="Project statistics">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section label */}
-          <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-blue-400 mb-10">
-            Our Impact By The Numbers
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {STATS.map((s, i) => (
-              <div
-                key={i}
-                className="flex flex-col items-center text-center p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
-              >
-                <span className="material-symbols-outlined text-blue-400 text-2xl mb-2">{s.icon}</span>
-                <span className="text-xl font-extrabold text-white leading-tight mb-1">{s.value}</span>
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider leading-snug">
-                  {s.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── 5. CTA SECTION ── */}
       <section className="py-20 bg-primary relative overflow-hidden" aria-label="Call to action">
         {/* Subtle pattern */}
@@ -428,7 +400,7 @@ const Projects: React.FC = () => {
             Ready to Bring Your Project to Life?
           </h2>
           <p className="text-lg text-blue-100 leading-relaxed mb-10 max-w-2xl mx-auto">
-            With over 80 years of combined experience and a proven track record of successful project
+            With over 50 years of combined experience and a proven track record of successful project
             delivery, KAVI Consulting Inc. is ready to turn your vision into reality — from concept
             to completion.
           </p>
