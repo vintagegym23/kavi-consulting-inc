@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -50,7 +51,19 @@ const SEO = () => {
   );
 };
 
+const aboutSections = [
+  { id: 'overview', label: 'Our Story', icon: 'auto_stories' },
+  { id: 'core-values', label: 'Core Values', icon: 'emoji_objects' },
+  { id: 'why-choose-kavi', label: 'Why Choose KAVI', icon: 'thumb_up' },
+  { id: 'leadership', label: 'Leadership', icon: 'groups' },
+  { id: 'certifications', label: 'Certifications', icon: 'verified' },
+  { id: 'content-end-marker', label: 'Trusted By', icon: 'handshake' },
+] as const;
+
 const About: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -58,10 +71,6 @@ const About: React.FC = () => {
       once: true,
       offset: 100
     });
-
-    // Reflect URL hash in sidebar active state on initial load
-    const hash = window.location.hash.replace('#', '');
-    if (hash) setActiveSection(hash);
   }, []);
 
   const [expandedValues, setExpandedValues] = useState<Record<number, boolean>>({});
@@ -81,47 +90,56 @@ const About: React.FC = () => {
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const topbarRef = useRef<HTMLDivElement>(null);
 
-  // Section definitions for the sidebar — mapped to actual page sections
-  const sections = [
-    { id: 'overview', label: 'Our Story', icon: 'auto_stories' },
-    { id: 'core-values', label: 'Core Values', icon: 'emoji_objects' },
-    { id: 'leadership', label: 'Leadership', icon: 'groups' },
-    { id: 'certifications', label: 'Certifications', icon: 'verified' },
-    { id: 'content-end-marker', label: 'Trusted By', icon: 'handshake' },
-  ];
-
-  // Track which section is in the viewport
+  // Track which section is in the viewport using a single observer so all
+  // entry changes are processed in one atomic batch (avoids stale-Set issues
+  // that occur when multiple per-section observers fire independently).
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
     const visibleSections = new Set<string>();
 
-    sections.forEach(({ id }) => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            visibleSections.add(entry.target.id);
+          } else {
+            visibleSections.delete(entry.target.id);
+          }
+        });
+        const topmost = aboutSections.find(s => visibleSections.has(s.id));
+        if (topmost && !isScrollingRef.current) setActiveSection(topmost.id);
+      },
+      { rootMargin: '-10% 0px -75% 0px' }
+    );
+
+    aboutSections.forEach(({ id }) => {
       const el = document.getElementById(id);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              visibleSections.add(entry.target.id);
-            } else {
-              visibleSections.delete(entry.target.id);
-            }
-          });
-          const topmost = sections.find(s => visibleSections.has(s.id));
-          if (topmost && !isScrollingRef.current) setActiveSection(topmost.id);
-        },
-        { rootMargin: '-30% 0px -60% 0px' }
-      );
-      obs.observe(el);
-      observers.push(obs);
+      if (el) observer.observe(el);
     });
 
     return () => {
-      observers.forEach(o => o.disconnect());
+      observer.disconnect();
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    const matchingSection = aboutSections.find(section => section.id === hash);
+    if (matchingSection) {
+      setActiveSection(matchingSection.id);
+      // Lock the IntersectionObserver so it cannot override activeSection while
+      // the scroll is in progress — this covers Navbar-dropdown-triggered
+      // navigation where scrollToSection is never called and the ref is not set.
+      // (When scrollToSection IS the source it already holds this lock, so
+      // double-setting it here is harmless.)
+      isScrollingRef.current = true;
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 1200);
+    }
+  }, [location.hash]);
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
@@ -133,17 +151,36 @@ const About: React.FC = () => {
       const subNavH = document.querySelector('[data-subnav]')?.clientHeight ?? 52;
       const top = el.getBoundingClientRect().top + window.scrollY - navbarH - subNavH - 8;
       window.scrollTo({ top, behavior: 'smooth' });
-      window.history.pushState(null, '', `#${id}`);
+      el.setAttribute('tabindex', '-1');
+      el.focus({ preventScroll: true });
     }
+    // replace:true keeps the URL in sync without stacking a history entry per
+    // section click (back button should leave the page, not step through sections)
+    if (location.hash !== `#${id}`) {
+      navigate({ pathname: location.pathname, hash: `#${id}` }, { replace: true });
+    }
+    // 1200ms covers even long-distance smooth scrolls; prevents the observer
+    // from prematurely updating activeSection while still mid-scroll
     scrollTimerRef.current = setTimeout(() => {
       isScrollingRef.current = false;
-    }, 1000);
+    }, 1200);
   };
 
-  // Auto-scroll topbar to keep active tab visible
+  // Auto-scroll topbar to keep the active tab centred (without triggering page scroll).
+  // Uses getBoundingClientRect so the calculation is correct regardless of which
+  // ancestor is the offsetParent (sticky nav, padding wrappers, etc.).
   useEffect(() => {
-    const activeEl = topbarRef.current?.querySelector(`[data-id="${activeSection}"]`) as HTMLElement | null;
-    activeEl?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+    const container = topbarRef.current;
+    if (!container) return;
+    const activeEl = container.querySelector(`[data-id="${activeSection}"]`) as HTMLElement | null;
+    if (!activeEl) return;
+    const containerRect = container.getBoundingClientRect();
+    const elRect = activeEl.getBoundingClientRect();
+    // Position of the element within the scrollable content
+    const elRelativeLeft = elRect.left - containerRect.left + container.scrollLeft;
+    // Centre the element horizontally in the container
+    const targetScrollLeft = elRelativeLeft - (container.clientWidth - activeEl.offsetWidth) / 2;
+    container.scrollTo({ left: Math.max(0, targetScrollLeft), behavior: 'smooth' });
   }, [activeSection]);
 
 
@@ -176,7 +213,7 @@ const About: React.FC = () => {
       projects: '85+',
       img: aravind,
       social: '#',
-      specialties: ['Transportation Engineering', 'Drainage', 'Utility Design', 'Construction Management', 'District Engineering', 'Municipal Engineering']
+      specialties: ['Transportation Engineering', 'Drainage', 'Utility Design', 'Construction Management', 'District Engineering']
     }
   ];
 
@@ -316,37 +353,46 @@ const About: React.FC = () => {
         </section>
 
         {/* ── STICKY SUB-NAV (topbar) ── */}
-        <nav data-subnav className="sticky top-[80px] z-40 bg-white/95 backdrop-blur-sm border-b border-slate-100 shadow-sm" aria-label="Page sections">
-          <div ref={topbarRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center gap-1 overflow-x-auto hide-scrollbar py-3">
-            {sections.map(({ id, label, icon }) => {
-              const isActive = activeSection === id;
-              return (
-                <button
-                  key={id}
-                  data-id={id}
-                  onClick={() => scrollToSection(id)}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all duration-200 border-none cursor-pointer
-                    ${isActive
-                      ? 'bg-primary text-white shadow-md shadow-primary/30'
-                      : 'text-slate-500 hover:text-primary hover:bg-slate-100'}`}
-                  aria-label={`Go to ${label}`}
-                  aria-current={isActive ? 'true' : 'false'}
-                >
-                  <span
-                    className="material-symbols-outlined"
-                    style={{ fontSize: 13, fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
+        {/* topbarRef is on the overflow container so scrollLeft / scrollTo work correctly.
+            The inner div uses inline-flex + min-w-full + justify-center:
+            - min-w-full  → expands to at least the viewport width (enables centering)
+            - inline-flex → grows beyond min-w-full when content is wider (no left-side clip)
+            - justify-center → centres the buttons when they fit; has no effect when overflowing
+            This avoids the flex+justify-center+overflow-x-auto bug where the left half of
+            overflowed content becomes permanently unreachable. */}
+        <nav data-subnav className="sticky top-[81px] z-40 bg-white/95 backdrop-blur-sm border-b border-slate-100 shadow-sm" aria-label="Page sections">
+          <div ref={topbarRef} className="overflow-x-auto hide-scrollbar">
+            <div className="inline-flex items-center justify-center gap-1 py-3 px-4 sm:px-6 lg:px-8 min-w-full">
+              {aboutSections.map(({ id, label, icon }) => {
+                const isActive = activeSection === id;
+                return (
+                  <button
+                    key={id}
+                    data-id={id}
+                    onClick={() => scrollToSection(id)}
+                    className={`flex-shrink-0 flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all duration-200 border-none cursor-pointer
+                      ${isActive
+                        ? 'bg-primary text-white shadow-md shadow-primary/30'
+                        : 'text-slate-500 hover:text-primary hover:bg-slate-100'}`}
+                    aria-label={`Go to ${label}`}
+                    aria-current={isActive ? 'true' : 'false'}
                   >
-                    {icon}
-                  </span>
-                  {label}
-                </button>
-              );
-            })}
+                    <span
+                      className="material-symbols-outlined"
+                      style={{ fontSize: 13, fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
+                    >
+                      {icon}
+                    </span>
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </nav>
 
         {/* 8.1 Company Story Enhancement & 1.2 Timeline Enhancement */}
-        <section id="overview" className="py-16 md:py-24 bg-white relative overflow-hidden" aria-label="Company History">
+        <section id="overview" className="py-16 md:py-24 bg-white relative overflow-hidden scroll-mt-36" aria-label="Company History">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-stretch">
               <div className="space-y-8" data-aos="fade-right">
@@ -388,7 +434,7 @@ const About: React.FC = () => {
         </section>
 
         {/* 1.3 Core Values Section Enhancement */}
-        <section id="core-values" className="py-16 md:py-24 bg-white border-y border-slate-100 relative z-10 scroll-mt-24 overflow-hidden">
+        <section id="core-values" className="py-16 md:py-24 bg-white border-y border-slate-100 relative z-10 scroll-mt-36 overflow-hidden">
           <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50 skew-x-12 transform origin-top-right pointer-events-none"></div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
 
@@ -477,7 +523,7 @@ const About: React.FC = () => {
         </section>
 
         {/* 5.2 Why Choose Us / Our Approach section */}
-        <section className="py-16 md:py-24 bg-slate-50 border-b border-slate-200" aria-label="Why Choose Us">
+        <section id="why-choose-kavi" className="py-16 md:py-24 bg-slate-50 border-b border-slate-200 scroll-mt-36" aria-label="Why Choose Us">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16" data-aos="fade-up">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-6">Why Choose KAVI</h2>
@@ -514,7 +560,7 @@ const About: React.FC = () => {
         </section>
 
         {/* 2.1 Leadership Section Improvements */}
-        <section id="leadership" className="py-16 md:py-24 bg-white" aria-labelledby="leadership-heading">
+        <section id="leadership" className="py-16 md:py-24 bg-white scroll-mt-36" aria-labelledby="leadership-heading">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 md:mb-20" data-aos="fade-up">
               <h2 id="leadership-heading" className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">Executive Leadership</h2>
@@ -567,7 +613,7 @@ const About: React.FC = () => {
         </section>
 
         {/* 3.1 Certifications Section Improvements */}
-        <section id="certifications" className="py-16 md:py-24 bg-[#f8faff]" aria-label="Official Certifications">
+        <section id="certifications" className="py-16 md:py-24 bg-[#f8faff] scroll-mt-36" aria-label="Official Certifications">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <div className="text-center mb-12" data-aos="fade-up">
@@ -723,7 +769,7 @@ const About: React.FC = () => {
         )}
 
         {/* Partners Marquee */}
-        <section id="content-end-marker" className="py-16 md:py-32 bg-white border-t border-slate-100 overflow-hidden">
+        <section id="content-end-marker" className="py-16 md:py-32 bg-white border-t border-slate-100 overflow-hidden scroll-mt-36">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
             <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400 mb-4">Trusted By Industry Leaders</h2>
           </div>

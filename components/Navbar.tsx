@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../images/kavilogo.png';
 
 interface SubLink {
@@ -19,8 +19,9 @@ const navLinks: NavLink[] = [
     name: 'About Us',
     path: '/about',
     subLinks: [
-      { name: 'Company Overview', path: '/about#overview' },
-      { name: 'History', path: '/about#history' },
+      { name: 'Our Story', path: '/about#overview' },
+      { name: 'Core Values', path: '/about#core-values' },
+      { name: 'Why Choose KAVI', path: '/about#why-choose-kavi' },
       { name: 'Leadership', path: '/about#leadership' },
       { name: 'Certifications', path: '/about#certifications' },
       { name: 'Trusted By', path: '/about#content-end-marker' },
@@ -46,10 +47,32 @@ const navLinks: NavLink[] = [
 
 const Navbar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
+  // Tracks previous pathname so we only auto-scroll to a hash on cross-page navigation
+  const prevPathnameRef = useRef<string>('');
 
   const isActive = (path: string) => location.pathname === path || (path !== '/' && location.pathname.startsWith(path + '/'));
+
+  const scrollToHashTarget = (id: string) => {
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    const subNavEl = document.querySelector('[data-subnav]') as HTMLElement | null;
+    const subNavHeight = subNavEl ? subNavEl.offsetHeight : 0;
+    const navHeight = 80 + subNavHeight;
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.scrollY - navHeight - 8;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+
+    element.setAttribute('tabindex', '-1');
+    element.focus({ preventScroll: true });
+  };
 
   const toggleMobileDropdown = (name: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -62,63 +85,52 @@ const Navbar: React.FC = () => {
     setMobileDropdownOpen(null);
   }, [location.pathname]);
 
-  // Handle scrolling when hash changes or page loads with a hash
+  // Handle scrolling when navigating to a new page that has a hash.
+  // For same-page hash changes, handleSubLinkClick scrolls directly so we
+  // deliberately skip this effect to prevent a double-scroll.
   useEffect(() => {
+    let scrollTimeout: ReturnType<typeof setTimeout> | undefined;
+
+    const pathChanged = prevPathnameRef.current !== location.pathname;
+    prevPathnameRef.current = location.pathname;
+
     if (location.hash) {
       const id = location.hash.replace('#', '');
-
-      // Longer delay to allow the new page's DOM (including sticky sub-navs) to fully render
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) {
-          // On /services the page has an extra sticky sub-nav (~52px), account for it
-          const subNavEl = document.querySelector('[data-subnav]') as HTMLElement | null;
-          const subNavHeight = subNavEl ? subNavEl.offsetHeight : 0;
-          const navHeight = 80 + subNavHeight;
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.scrollY - navHeight - 8;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
-
-          // Accessibility focus
-          element.setAttribute('tabindex', '-1');
-          element.focus({ preventScroll: true });
-        }
-      }, 300);
+      if (pathChanged) {
+        // Cross-page navigation: wait for the new page's DOM (including any
+        // sticky sub-navs) to fully render before scrolling.
+        scrollTimeout = setTimeout(() => {
+          scrollToHashTarget(id);
+        }, 300);
+      }
+      // Same-page hash change: scrolling is handled directly by
+      // handleSubLinkClick (or by the page's own subnav via scrollToSection).
     } else {
       window.scrollTo({ top: 0, behavior: 'auto' });
     }
+
+    return () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+    };
   }, [location.pathname, location.hash]);
 
   const handleSubLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
     const [targetPath, targetHash] = path.split('#');
 
-    // If we're already on the same page, manually handle the smooth scroll
+    // If we're already on the same page, scroll directly without relying on
+    // the useEffect (which now only fires on cross-page navigation to avoid
+    // double-scrolling with pages that have their own subnav).
     if (location.pathname === targetPath && targetHash) {
       e.preventDefault();
 
-      // Update URL hash without causing a page jump
-      window.history.pushState(null, '', path);
+      // Always scroll immediately so the user sees the response right away
+      scrollToHashTarget(targetHash);
 
-      const element = document.getElementById(targetHash);
-      if (element) {
-        // Account for any sticky sub-nav present on the current page
-        const subNavEl = document.querySelector('[data-subnav]') as HTMLElement | null;
-        const subNavHeight = subNavEl ? subNavEl.offsetHeight : 0;
-        const navHeight = 80 + subNavHeight;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.scrollY - navHeight - 8;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-
-        element.setAttribute('tabindex', '-1');
-        element.focus({ preventScroll: true });
+      // Update the URL hash if it changed (keeps the back button and
+      // dropdown active-state in sync, but does NOT trigger another scroll
+      // because pathChanged will be false in the useEffect)
+      if (location.hash !== `#${targetHash}`) {
+        navigate({ pathname: targetPath, hash: `#${targetHash}` });
       }
 
       setIsOpen(false);
@@ -164,7 +176,8 @@ const Navbar: React.FC = () => {
                       {/* ^ "before:" pseudo-element bridges the gap to prevent cursor flicker when transitioning from link to dropdown */}
                       <div className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden py-3 flex flex-col max-h-[70vh] overflow-y-auto custom-dropdown-scrollbar">
                         {link.subLinks.map((sub, idx) => {
-                          const subActive = location.hash === sub.path.split('#')[1] || location.pathname === sub.path;
+                          const [subPath, subHash] = sub.path.split('#');
+                          const subActive = location.pathname === subPath && (subHash ? location.hash === `#${subHash}` : !location.hash);
                           return (
                             <Link
                               key={idx}
