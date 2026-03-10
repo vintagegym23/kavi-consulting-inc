@@ -74,8 +74,8 @@ const Contact: React.FC = () => {
     },
     {
       icon: 'mail', title: 'Email',
-      lines: ['info@kaviconsulting.com'],
-      href: 'mailto:info@kaviconsulting.com', action: 'Send Email', color: '#7c3aed',
+      lines: ['info@kaviconsultinginc.com'],
+      href: 'mailto:info@kaviconsultinginc.com', action: 'Send Email', color: '#7c3aed',
     },
   ];
 

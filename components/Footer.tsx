@@ -85,8 +85,8 @@ const Footer: React.FC = () => {
                 },
                 {
                   icon: 'mail',
-                  lines: ['info@kaviconsulting.com'],
-                  href: 'mailto:info@kaviconsulting.com',
+                  lines: ['info@kaviconsultinginc.com'],
+                  href: 'mailto:info@kaviconsultinginc.com',
                 },
               ].map(({ icon, lines, href }, i) => (
                 <li key={i} className="flex items-start gap-3">
