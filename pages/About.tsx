@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import CountUp from 'react-countup';
 
 // Using provided images
 import vijaya from "../images/Vijaya Rapolu.png";
@@ -77,37 +76,26 @@ const About: React.FC = () => {
 
   const [certModal, setCertModal] = useState<any>(null);
   const [activeSection, setActiveSection] = useState<string>('overview');
-  const [showSidebar, setShowSidebar] = useState<boolean>(true);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
 
   const isScrollingRef = useRef<boolean>(false);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const mobileTabsRef = useRef<HTMLDivElement>(null);
+  const topbarRef = useRef<HTMLDivElement>(null);
 
   // Section definitions for the sidebar — mapped to actual page sections
   const sections = [
     { id: 'overview', label: 'Our Story', icon: 'auto_stories' },
-    { id: 'history', label: 'Timeline', icon: 'timeline' },
-    { id: 'our-numbers', label: 'By The Numbers', icon: 'bar_chart' },
     { id: 'core-values', label: 'Core Values', icon: 'emoji_objects' },
     { id: 'leadership', label: 'Leadership', icon: 'groups' },
     { id: 'certifications', label: 'Certifications', icon: 'verified' },
     { id: 'content-end-marker', label: 'Trusted By', icon: 'handshake' },
   ];
 
-  // Track which section is in the viewport & handle sidebar scroll visibility
+  // Track which section is in the viewport
   useEffect(() => {
-    // 1. Intersection Observer for active sections
-    // Track all currently-intersecting sections in a Set so we can always
-    // resolve to the topmost visible one when entries change in either direction.
     const observers: IntersectionObserver[] = [];
     const visibleSections = new Set<string>();
 
     sections.forEach(({ id }) => {
-      // 'history' (Timeline) is a sibling div inside the 'overview' section.
-      // Both always intersect simultaneously, so the observer can't distinguish them.
-      // The handleScroll function resolves this split via scroll-progress instead.
-      if (id === 'history') return;
       const el = document.getElementById(id);
       if (!el) return;
       const obs = new IntersectionObserver(
@@ -119,58 +107,17 @@ const About: React.FC = () => {
               visibleSections.delete(entry.target.id);
             }
           });
-          // Always resolve to the topmost section currently in the viewport.
-          // Skip updates while a programmatic scroll is in progress to prevent
-          // intermediate sections from overriding the clicked target.
           const topmost = sections.find(s => visibleSections.has(s.id));
           if (topmost && !isScrollingRef.current) setActiveSection(topmost.id);
         },
-        { rootMargin: '-80px 0px -15% 0px' }
+        { rootMargin: '-30% 0px -60% 0px' }
       );
       obs.observe(el);
       observers.push(obs);
     });
 
-    // 2. Scroll tracking for floating sidebar visibility constraints
-    const handleScroll = () => {
-      const footer = document.querySelector('footer');
-      if (footer) {
-        const footerRect = footer.getBoundingClientRect();
-
-        // Hide sidebar ONLY when the physical footer comes up to overlap it
-        const isBeforeFooter = footerRect.top > (window.innerHeight * 0.75);
-
-        setShowSidebar(isBeforeFooter);
-      } else {
-        setShowSidebar(true);
-      }
-
-      // 'history' (Timeline) lives inside the 'overview' section div, so the
-      // IntersectionObserver always sees them together. Resolve which one is
-      // active by measuring how far we've scrolled through that shared section.
-      if (!isScrollingRef.current) {
-        const overviewEl = document.getElementById('overview');
-        const nextEl = document.getElementById('our-numbers');
-        if (overviewEl) {
-          const r = overviewEl.getBoundingClientRect();
-          const nextTop = nextEl ? nextEl.getBoundingClientRect().top : Infinity;
-          // Only handle this split while we're inside the section and before the next one
-          if (r.top < window.innerHeight * 0.85 && r.bottom > 80 && nextTop > 80) {
-            // progress = how much of the section has scrolled past the trigger line
-            const progress = Math.max(0, 80 - r.top) / r.height;
-            setActiveSection(progress >= 0.45 ? 'history' : 'overview');
-          }
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    // Run initially setup calculations
-    handleScroll();
-
     return () => {
       observers.forEach(o => o.disconnect());
-      window.removeEventListener('scroll', handleScroll);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -178,13 +125,13 @@ const About: React.FC = () => {
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
-    // Lock observer updates for the duration of the smooth scroll so
-    // intermediate sections don't override the intended active item.
     isScrollingRef.current = true;
     if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
     const el = document.getElementById(id);
     if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - 100;
+      const navbarH = document.querySelector('header')?.clientHeight ?? 72;
+      const subNavH = document.querySelector('[data-subnav]')?.clientHeight ?? 52;
+      const top = el.getBoundingClientRect().top + window.scrollY - navbarH - subNavH - 8;
       window.scrollTo({ top, behavior: 'smooth' });
       window.history.pushState(null, '', `#${id}`);
     }
@@ -193,51 +140,13 @@ const About: React.FC = () => {
     }, 1000);
   };
 
-  // Auto-scroll mobile tab bar to keep active tab visible
+  // Auto-scroll topbar to keep active tab visible
   useEffect(() => {
-    const activeEl = mobileTabsRef.current?.querySelector(`[data-id="${activeSection}"]`) as HTMLElement | null;
+    const activeEl = topbarRef.current?.querySelector(`[data-id="${activeSection}"]`) as HTMLElement | null;
     activeEl?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
   }, [activeSection]);
 
 
-
-  const historyMilestones = [
-    {
-      year: '2010',
-      title: 'Company Founded',
-      icon: 'foundation',
-      desc: 'KAVI Consulting, Inc. was established in Houston, TX by Vijaya Rapolu, P.E., with a vision to deliver precision-driven civil engineering solutions to both public and private sectors.',
-      aosDelay: 0
-    },
-    {
-      year: '2013',
-      title: 'First State Contracts',
-      icon: 'handshake',
-      desc: 'Secured first major state-level contracts in transportation planning and drainage design, establishing KAVI as a trusted DBE/MBE partner for TxDOT and municipal agencies.',
-      aosDelay: 100
-    },
-    {
-      year: '2016',
-      title: 'HUB & DBE Certifications',
-      icon: 'verified',
-      desc: 'Achieved Historically Underutilized Business (HUB) and Disadvantaged Business Enterprise (DBE) certifications, expanding access to state and federal infrastructure programs.',
-      aosDelay: 200
-    },
-    {
-      year: '2020',
-      title: 'Full-Service Expansion',
-      icon: 'trending_up',
-      desc: 'Expanded service offerings to include H&H Modeling, Construction Management, and Program Management — growing from a specialized consultancy to a full-spectrum civil engineering firm.',
-      aosDelay: 300
-    },
-    {
-      year: '2024',
-      title: 'Nationwide Recognition',
-      icon: 'public',
-      desc: 'Celebrated 14+ years of excellence with 250+ completed projects, recognized as a Minority Business Enterprise (MBE) and trusted partner to government agencies, developers, and community organizations.',
-      aosDelay: 400
-    },
-  ];
 
   const coreValues = [
     { title: 'Safety First', icon: 'security', color: '#0066cc', shortDesc: 'Prioritizing safety measures for quality excellence and environmental responsibility.', fullDesc: 'Safety is the foundation of everything we do. Our comprehensive safety program exceeds OSHA requirements and includes weekly safety training, site-specific safety plans for every project, a zero-tolerance policy for safety violations, and regular third-party safety audits. Our commitment has resulted in 1000+ consecutive days without a lost-time incident.' },
@@ -257,17 +166,17 @@ const About: React.FC = () => {
       projects: '150+',
       img: vijaya,
       social: '#',
-      specialties: ['Transportation Engineering', 'Hydrologic & Hydraulic Design', 'Program Management', 'Strategic Planning']
+      specialties: ['Transportation Engineering', 'Hydrologic & Hydraulic Design', 'Program Management', 'Strategic Planning', 'Feasibility Studies', 'Site Development']
     },
     {
       name: 'Aravind Nimma, P.E., CFM',
       role: 'Director of Operations',
       bio: 'Aravind brings 17 years of specialized expertise in municipal engineering and flood management. His certified leadership ensures that every operational phase—from drainage design to site development—is executed perfectly.',
-      exp: '17+ Years',
+      exp: '20+ Years',
       projects: '85+',
       img: aravind,
       social: '#',
-      specialties: ['Drainage & Stormwater', 'Certified Floodplain Mgmt', 'Construction Services', 'Municipal Engineering']
+      specialties: ['Transportation Engineering', 'Drainage', 'Utility Design', 'Construction Management', 'District Engineering', 'Municipal Engineering']
     }
   ];
 
@@ -310,11 +219,11 @@ const About: React.FC = () => {
           background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
           background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
         }
-        
+
         .animated-pulse-dot {
           animation: pulse-ring 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
         }
-        
+
         @keyframes pulse-ring {
           0% { box-shadow: 0 0 0 0 rgba(43, 108, 176, 0.4); }
           70% { box-shadow: 0 0 0 10px rgba(43, 108, 176, 0); }
@@ -332,11 +241,9 @@ const About: React.FC = () => {
           0% { transform: translateY(0) rotate(0deg); }
           100% { transform: translateY(-40px) rotate(15deg); }
         }
-        
-        @media (prefers-reduced-motion: reduce) {
-          .sidebar-btn, .mobile-tab { transition: none; }
-          .sidebar-btn:hover .sb-icon { transform: none; }
-        }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* ── Cert Grid Specific ── */
         .cert-card {
@@ -384,232 +291,9 @@ const About: React.FC = () => {
           font-size: 3.5rem;
           margin-bottom: 1.5rem;
         }
-
-        /* ── About Us Page Sidebar ── */
-        .about-sidebar {
-          position: fixed;
-          top: 50%;
-          left: 24px;
-          transform: translateY(-50%);
-          z-index: 80;
-          pointer-events: auto;
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-          padding: 10px 8px;
-          /* Pure glass morphism */
-          background: rgba(255, 255, 255, 0.45);
-          backdrop-filter: blur(28px);
-          -webkit-backdrop-filter: blur(28px);
-          border: 1px solid rgba(255, 255, 255, 0.7);
-          border-radius: 18px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.9);
-          width: 190px;
-          max-height: 80vh;
-          overflow-x: hidden;
-          overflow-y: auto;
-          opacity: 1;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .about-sidebar.sidebar-collapsed {
-          width: 58px;
-          padding: 10px 6px;
-        }
-
-        .about-sidebar.sidebar-hidden {
-          opacity: 0;
-          transform: translateY(-50%) translateX(-20px);
-          pointer-events: none;
-        }
-
-        /* Desktop only sidebar */
-        @media (max-width: 1279px) { .about-sidebar { display: none !important; } }
-
-        /* Header label inside sidebar */
-        .about-sidebar-header {
-          font-size: 10px;
-          font-weight: 800;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: #1e293b;
-          padding: 4px 6px 8px 10px;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-          margin-bottom: 4px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .sidebar-btn {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 9px 12px;
-          border-radius: 12px;
-          cursor: pointer;
-          border: none;
-          background: transparent;
-          width: 100%;
-          text-align: left;
-          transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
-          color: #334155;
-          font-size: 12.5px;
-          font-weight: 700;
-          letter-spacing: 0.01em;
-          white-space: nowrap;
-        }
-        .sidebar-btn:hover {
-          background: rgba(255, 255, 255, 0.6);
-          color: #0f172a;
-          transform: translateX(4px);
-        }
-        .sidebar-btn.sidebar-active {
-          background: linear-gradient(135deg, #2563eb, #1d4ed8);
-          color: #ffffff;
-          box-shadow: 0 4px 14px rgba(37,99,235,0.25);
-          transform: none;
-        }
-        .sidebar-btn .sb-icon {
-          flex-shrink: 0;
-          font-size: 17px;
-          transition: transform 0.2s ease;
-        }
-        .sidebar-btn:hover .sb-icon { transform: scale(1.15); }
-        .sidebar-btn.sidebar-active .sb-icon { transform: none; }
-
-        /* Active indicator bar */
-        .sidebar-btn.sidebar-active::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 3px;
-          height: 60%;
-          background: rgba(255,255,255,0.5);
-          border-radius: 0 2px 2px 0;
-        }
-        .sidebar-btn { position: relative; }
-
-        /* ── Mobile horizontal tab bar ── */
-        .about-mobile-tabs {
-          display: none;
-        }
-        @media (max-width: 1279px) {
-          .about-mobile-tabs {
-            display: flex;
-            position: sticky;
-            top: 72px;
-            z-index: 70;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid #e2e8f0;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-            overflow-x: auto;
-            gap: 4px;
-            padding: 8px 12px;
-            scrollbar-width: none;
-          }
-          .about-mobile-tabs::-webkit-scrollbar { display: none; }
-        }
-        .mobile-tab {
-          flex-shrink: 0;
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          padding: 6px 12px;
-          border-radius: 9999px;
-          border: none;
-          background: transparent;
-          color: #64748b;
-          font-size: 11px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          white-space: nowrap;
-          letter-spacing: 0.01em;
-        }
-        .mobile-tab:hover {
-          background: #f1f5f9;
-          color: #2b6cb0;
-        }
-        .mobile-tab.mobile-tab-active {
-          background: #2b6cb0;
-          color: #ffffff;
-          box-shadow: 0 2px 8px rgba(43,108,176,0.3);
-        }
-        .mobile-tab .mt-icon { font-size: 13px; flex-shrink: 0; }
       `}} />
-      {/* ── DESKTOP Floating Sidebar — rendered OUTSIDE the overflow-x-hidden div so position:fixed works correctly ── */}
-      <nav className={`about-sidebar hidden xl:flex ${!showSidebar ? 'sidebar-hidden' : ''} ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`} aria-label="Page sections">
-        <div className={`about-sidebar-header ${isSidebarCollapsed ? '!justify-center !px-0' : ''}`}>
-          <span className={isSidebarCollapsed ? 'hidden' : ''}>On This Page</span>
-          <button
-            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="flex items-center justify-center p-1 rounded-full text-slate-400 hover:bg-slate-200/50 hover:text-primary transition-colors focus:outline-none"
-            aria-label="Toggle Sidebar"
-            title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
-              {isSidebarCollapsed ? 'chevron_right' : 'chevron_left'}
-            </span>
-          </button>
-        </div>
-        {sections.map(({ id, label, icon }) => {
-          const isActive = activeSection === id;
-          return (
-            <button
-              key={id}
-              onClick={() => {
-                scrollToSection(id);
-              }}
-              className={`sidebar-btn flex-shrink-0 ${isActive ? 'sidebar-active' : ''} ${isSidebarCollapsed ? '!justify-center !px-1' : ''}`}
-              aria-label={`Go to ${label}`}
-              aria-current={isActive ? 'true' : 'false'}
-              title={isSidebarCollapsed ? label : undefined}
-            >
-              <span
-                className="material-symbols-outlined sb-icon flex-shrink-0"
-                style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
-              >
-                {icon}
-              </span>
-              <span className={`truncate ${isSidebarCollapsed ? 'hidden' : ''}`}>{label}</span>
-            </button>
-          );
-        })}
-      </nav>
 
       <div className="bg-slate-50 min-h-screen font-sans [overflow-x:clip]">
-
-        {/* ── MOBILE Horizontal Tab Bar ── */}
-        <nav ref={mobileTabsRef} className="about-mobile-tabs" aria-label="Page sections">
-          <div className="max-w-7xl mx-auto flex gap-1 w-full">
-          {sections.map(({ id, label, icon }) => {
-            const isActive = activeSection === id;
-            return (
-              <button
-                key={id}
-                data-id={id}
-                onClick={() => scrollToSection(id)}
-                className={`mobile-tab ${isActive ? 'mobile-tab-active' : ''}`}
-                aria-label={`Go to ${label}`}
-                aria-current={isActive ? 'true' : 'false'}
-              >
-                <span
-                  className="material-symbols-outlined mt-icon"
-                  style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
-                >
-                  {icon}
-                </span>
-                {label}
-              </button>
-            );
-          })}
-          </div>
-        </nav>
 
         {/* 1.1 Hero Section Enhancement */}
         <section id="hero-section" className="relative h-[55vh] min-h-[380px] sm:min-h-[500px] flex items-center overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-b-4 border-primary">
@@ -630,6 +314,36 @@ const About: React.FC = () => {
             </p>
           </div>
         </section>
+
+        {/* ── STICKY SUB-NAV (topbar) ── */}
+        <nav data-subnav className="sticky top-[80px] z-40 bg-white/95 backdrop-blur-sm border-b border-slate-100 shadow-sm" aria-label="Page sections">
+          <div ref={topbarRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center gap-1 overflow-x-auto hide-scrollbar py-3">
+            {sections.map(({ id, label, icon }) => {
+              const isActive = activeSection === id;
+              return (
+                <button
+                  key={id}
+                  data-id={id}
+                  onClick={() => scrollToSection(id)}
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all duration-200 border-none cursor-pointer
+                    ${isActive
+                      ? 'bg-primary text-white shadow-md shadow-primary/30'
+                      : 'text-slate-500 hover:text-primary hover:bg-slate-100'}`}
+                  aria-label={`Go to ${label}`}
+                  aria-current={isActive ? 'true' : 'false'}
+                >
+                  <span
+                    className="material-symbols-outlined"
+                    style={{ fontSize: 13, fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
+                  >
+                    {icon}
+                  </span>
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
 
         {/* 8.1 Company Story Enhancement & 1.2 Timeline Enhancement */}
         <section id="overview" className="py-16 md:py-24 bg-white relative overflow-hidden" aria-label="Company History">
@@ -659,65 +373,16 @@ const About: React.FC = () => {
                 </div>
               </div>
 
-              {/* 1.2 Enhanced Vertical Timeline */}
-              <div id="history" className="relative pt-4 pb-4 px-4 md:px-12 flex flex-col justify-center">
-                <div className="absolute left-[39px] md:left-[71px] top-0 bottom-0 w-1 bg-gradient-to-b from-primary/80 via-blue-400 to-transparent rounded-full shadow-[0_0_10px_rgba(43,108,176,0.5)] hidden sm:block"></div>
-
-                <div className="space-y-12 relative z-10" role="region" aria-label="Company History Timeline">
-                  {historyMilestones.map((milestone, idx) => (
-                    <div key={idx} className="relative sm:pl-28 group" data-aos="fade-up" data-aos-delay={milestone.aosDelay}>
-                      {/* Year badge — centered on the line, no overlap with dot */}
-                      <div className="hidden sm:flex absolute left-[7px] md:left-[39px] top-1 flex-col items-center justify-center z-20">
-                        <div className="w-16 py-1 bg-primary text-white text-sm font-extrabold rounded-lg shadow-lg text-center tracking-wide group-hover:bg-primary-dark transition-colors duration-300 whitespace-nowrap">
-                          {milestone.year}
-                        </div>
-                      </div>
-                      <div className="bg-slate-50 border border-slate-100 p-6 rounded-2xl shadow-sm group-hover:shadow-xl group-hover:border-primary/20 transition-all duration-300">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center border border-primary/20">
-                            <span className="material-symbols-outlined">{milestone.icon}</span>
-                          </div>
-                          <div>
-                            <span className="sm:hidden text-primary font-black text-sm block mb-1">{milestone.year}</span>
-                            <h3 className="text-xl font-bold text-slate-800">{milestone.title}</h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              {/* Construction Image Block */}
+              <div className="relative rounded-2xl overflow-hidden shadow-xl h-full min-h-[400px]" data-aos="fade-left">
+                <img
+                  src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                  alt="Civil engineering construction site with infrastructure development in progress"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 5.1 By The Numbers Stats Section */}
-        <section id="our-numbers" className="py-20 bg-primary relative overflow-hidden text-white scroll-mt-24" aria-label="Our impact by the numbers">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1590586767908-20d6d1b6db58?auto=format&fit=crop&w=2000&q=80')] mix-blend-overlay opacity-10 bg-cover bg-fixed"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-dark via-primary to-primary-light opacity-90"></div>
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center mb-12" data-aos="fade-up">
-              <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold mb-4 drop-shadow-md">Our Impact By The Numbers</h2>
-              <p className="text-blue-100 text-lg max-w-2xl mx-auto">Delivering measurable results and scaling robust infrastructure.</p>
-            </div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
-              {[
-                { icon: 'calendar_month', value: 15, suffix: '+', label: 'Years of Excellence', delay: 0 },
-                { icon: 'architecture', value: 250, suffix: '+', label: 'Projects Completed', delay: 100 },
-                { icon: 'workspace_premium', value: 12, suffix: '', label: 'Industry Awards', delay: 200 },
-                { icon: 'thumb_up', value: 95, suffix: '%', label: 'Client Satisfaction', delay: 300 }
-              ].map((stat, idx) => (
-                <div key={idx} className="bg-white/10 backdrop-blur-sm border border-white/20 p-4 sm:p-8 rounded-2xl text-center hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-2" data-aos="zoom-in" data-aos-delay={stat.delay}>
-                  <span className="material-symbols-outlined text-4xl text-blue-200 mb-4">{stat.icon}</span>
-                  <div className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-2 drop-shadow-sm flex items-center justify-center">
-                    <CountUp end={stat.value} duration={3} enableScrollSpy={true} scrollSpyOnce={true} separator="," />
-                    <span>{stat.suffix}</span>
-                  </div>
-                  <div className="text-blue-100 font-medium text-sm md:text-base uppercase tracking-wider">{stat.label}</div>
-                </div>
-              ))}
             </div>
           </div>
         </section>
@@ -815,7 +480,7 @@ const About: React.FC = () => {
         <section className="py-16 md:py-24 bg-slate-50 border-b border-slate-200" aria-label="Why Choose Us">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16" data-aos="fade-up">
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-6">Why Industry Leaders Choose KAVI</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-6">Why Choose KAVI</h2>
               <p className="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">
                 Our comprehensive approach combines technical excellence with collaborative partnership to deliver superior infrastructure solutions.
               </p>
@@ -857,12 +522,12 @@ const About: React.FC = () => {
               <p className="text-slate-600 max-w-2xl mx-auto text-lg">Leading with profound industry knowledge, unyielding integrity, and a dedication to engineering excellence.</p>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto items-start">
+            <div className="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto items-stretch">
               {leaders.map((leader, idx) => (
                 <div
                   key={idx}
                   tabIndex={0}
-                  className="group bg-white rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-slate-100 flex flex-col sm:flex-row hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all duration-300 w-full"
+                  className="group bg-white rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-slate-100 flex flex-col sm:flex-row hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all duration-300 w-full h-full"
                   data-aos={idx % 2 === 0 ? "fade-right" : "fade-left"}
                 >
                   {/* Photo — full width on mobile, fixed on sm+ */}
