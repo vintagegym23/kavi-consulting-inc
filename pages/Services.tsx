@@ -436,7 +436,7 @@ const Services: React.FC = () => {
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl leading-relaxed mb-8 sm:mb-10">
-                KAVI Consulting delivers <strong className="text-white">full-spectrum engineering services</strong> — from initial feasibility studies to final construction management — tailored to infrastructure development, transportation systems, and site development of any scale.
+                KAVI Consulting delivers <strong className="text-white">full-spectrum engineering services</strong> from initial feasibility studies to final construction management tailored to infrastructure development, transportation systems, and site development of any scale.
               </p>
             </div>
           </div>
