@@ -11,7 +11,7 @@ const LinkedInIcon = () => (
 
 const Footer: React.FC = () => {
   const socialLinks = [
-    { icon: <LinkedInIcon />, href: 'https://linkedin.com/company/kavi-consulting', label: 'LinkedIn' },
+    { icon: <LinkedInIcon />, href: 'https://www.linkedin.com/in/kavi-consulting-inc-4168373b6/', label: 'LinkedIn' },
   ];
 
   return (

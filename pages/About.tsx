@@ -40,7 +40,7 @@ const SEO = () => {
       "email": "info@kaviinc.com"
     },
     "sameAs": [
-      "https://www.linkedin.com/company/kavi-consulting"
+      "https://www.linkedin.com/in/kavi-consulting-inc-4168373b6/"
     ]
   };
 
