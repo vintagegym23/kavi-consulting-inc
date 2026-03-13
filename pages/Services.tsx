@@ -2,6 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import imgFeasibility from '../images/feasiblity_studies.png';
+import imgTransport from '../images/transport_engineering.jpeg';
+import imgDrainage from '../images/drainage_design.png';
+import imgUtility from '../images/utility_design.png';
+import imgConstruction from '../images/construction_engineering.png';
+import imgDistrict from '../images/district_engineering.png';
+import imgSite from '../images/site_development.png';
+import imgProgram from '../images/program_management.png';
 
 // ─────────────────────────────────────────────
 // Service Data
@@ -21,7 +29,7 @@ const services = [
       'Environmental Constraints Analysis',
       'Stakeholder Coordination & Public Impact Studies',
     ],
-    img: '/images/feasiblity_studies.png',
+    img: imgFeasibility,
     imgAlt: 'Engineers reviewing site plans and blueprints for feasibility',
     accent: '#2B6CB0',
     flip: false,
@@ -40,7 +48,7 @@ const services = [
       'Intelligent Transportation Systems (ITS)',
       'Construction Sequencing & Phasing Plans',
     ],
-    img: '/images/transport_engineering.jpeg',
+    img: imgTransport,
     imgAlt: 'Transportation planning and design team',
     accent: '#0066cc',
     flip: false,
@@ -59,7 +67,7 @@ const services = [
       'Detention / Retention Basin Design',
       'Erosion, Sediment Control & Green Infrastructure',
     ],
-    img: '/images/drainage_design.png',
+    img: imgDrainage,
     imgAlt: 'Hydrologic modeling and drainage design team',
     accent: '#0891b2',
     flip: true,
@@ -78,7 +86,7 @@ const services = [
       'Utility Relocation & Conflict Resolution',
       'Utility Mapping & GIS Services',
     ],
-    img: '/images/utility_design.png',
+    img: imgUtility,
     imgAlt: 'Engineers working on utility infrastructure design',
     accent: '#7c3aed',
     flip: false,
@@ -97,7 +105,7 @@ const services = [
       'Quality Assurance & Quality Control Programs',
       'Punch List Management & Project Closeout',
     ],
-    img: '/images/construction_engineering.png',
+    img: imgConstruction,
     imgAlt: 'Construction team overseeing a large infrastructure project site',
     accent: '#e11d48',
     flip: true,
@@ -116,7 +124,7 @@ const services = [
       'Infrastructure Condition Assessments',
       'Public Board Meeting Representation',
     ],
-    img: '/images/district_engineering.png',
+    img: imgDistrict,
     imgAlt: 'District engineering team reviewing capital improvement plans',
     accent: '#059669',
     flip: false,
@@ -135,7 +143,7 @@ const services = [
       'Right-of-Way & Easement Coordination',
       'Master Planned Community Engineering',
     ],
-    img: '/images/site_development.png',
+    img: imgSite,
     imgAlt: 'Site development team reviewing master planned community plans',
     accent: '#0f766e',
     flip: true,
@@ -154,7 +162,7 @@ const services = [
       'Stakeholder Communication & Reporting',
       'Performance Monitoring, KPIs & Reporting',
     ],
-    img: '/images/program_management.png',
+    img: imgProgram,
     imgAlt: 'Program management team overseeing global infrastructure portfolio',
     accent: '#2B6CB0',
     flip: false,
