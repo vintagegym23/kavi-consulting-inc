@@ -169,7 +169,7 @@ const Contact: React.FC = () => {
               {/* Quick Link Pills */}
               <div className="flex flex-wrap gap-3 pt-2">
                 {[
-                  { icon: 'work', label: 'LinkedIn', href: 'https://linkedin.com/company/kavi-consulting' },
+                  { icon: 'work', label: 'LinkedIn', href: 'https://www.linkedin.com/in/kavi-consulting-inc-4168373b6/' },
                   { icon: 'map', label: 'Get Directions', href: 'https://maps.google.com/?q=1011+Highway+6S+%23307+Houston+TX+77077' },
                 ].map((link, i) => (
                   <a
